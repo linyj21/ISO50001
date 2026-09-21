@@ -1,0 +1,2369 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ISO 50001 能源管理系統 自我測驗</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #eef2f1;
+  --panel: #ffffff;
+  --ink: #1d2a2e;
+  --muted: #5f6f72;
+  --line: #d3dcda;
+  --accent: #2f7d6d;
+  --accent-dark: #25665a;
+  --accent-soft: #dcefe9;
+  --wrong: #b5473a;
+  --wrong-soft: #f6e1dd;
+  --scenario: #f3f6f5;
+  color-scheme: light;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", sans-serif;
+  line-height: 1.7;
+}
+
+.wrap {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 40px 16px 56px;
+}
+
+a { color: var(--accent-dark); }
+
+h1 { font-size: 28px; line-height: 1.4; margin: 0 0 8px; }
+h2 { font-size: 20px; line-height: 1.5; margin: 0 0 8px; }
+p { margin: 0 0 12px; }
+
+.lead { color: var(--muted); max-width: 36em; }
+
+.back {
+  display: inline-block;
+  margin-bottom: 20px;
+  font-size: 15px;
+  text-decoration: none;
+}
+.back:hover { text-decoration: underline; }
+
+/* ---------- 首頁 ---------- */
+.site-head { margin-bottom: 28px; }
+
+.choices {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 16px;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  background: var(--panel);
+  border: 1.5px solid var(--line);
+  border-radius: 14px;
+  padding: 24px 22px;
+  color: inherit;
+  text-decoration: none;
+}
+.card:hover { border-color: var(--accent); }
+.card:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+
+.card p { color: var(--muted); }
+
+.meta {
+  margin: 4px 0 16px;
+  padding: 0;
+  list-style: none;
+  font-size: 15px;
+}
+.meta li { padding: 2px 0; }
+.meta span { color: var(--muted); display: inline-block; min-width: 4.5em; }
+
+.status { font-size: 14px; color: var(--muted); margin-top: auto; padding-top: 8px; }
+.status.done { color: var(--accent-dark); }
+
+.card .btn { margin-top: 12px; align-self: flex-start; }
+
+.site-foot {
+  margin-top: 36px;
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+  font-size: 14px;
+  color: var(--muted);
+}
+
+/* ---------- 單元列表 ---------- */
+.units { display: grid; gap: 12px; margin-top: 20px; }
+.unit {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 4px 16px;
+  align-items: start;
+}
+.unit h2 { margin: 0; }
+.unit .count { font-size: 15px; color: var(--muted); white-space: nowrap; }
+.unit p, .unit .status { grid-column: 1 / -1; margin: 0; }
+
+/* ---------- 說明頁與作答 ---------- */
+.panel {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 28px 24px;
+}
+
+.quiz-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 12px;
+  font-size: 14px;
+  color: var(--muted);
+}
+.quiz-top .back { margin: 0; }
+
+.progress { height: 6px; background: var(--line); border-radius: 3px; overflow: hidden; }
+.progress-bar { height: 100%; width: 0; background: var(--accent); transition: width .3s ease; }
+.count-line { color: var(--muted); font-size: 14px; margin: 12px 0 8px; }
+
+.scenario {
+  background: var(--scenario);
+  border-left: 4px solid var(--accent);
+  border-radius: 6px;
+  padding: 12px 16px;
+  margin-bottom: 16px;
+}
+.scenario-label { font-size: 14px; color: var(--muted); display: block; }
+
+.question { font-size: 20px; font-weight: 500; line-height: 1.55; margin: 0 0 18px; }
+
+.options { display: grid; gap: 10px; }
+.option {
+  font: inherit;
+  font-size: 16px;
+  text-align: left;
+  line-height: 1.55;
+  padding: 13px 16px;
+  background: var(--panel);
+  color: var(--ink);
+  border: 1.5px solid var(--line);
+  border-radius: 10px;
+  cursor: pointer;
+}
+.option:hover:not(:disabled) { border-color: var(--accent); }
+.option:disabled { cursor: default; }
+.option.correct { border-color: var(--accent); background: var(--accent-soft); }
+.option.wrong { border-color: var(--wrong); background: var(--wrong-soft); }
+
+.feedback {
+  margin-top: 16px;
+  padding: 14px 16px;
+  border-radius: 10px;
+  background: var(--scenario);
+}
+.feedback strong { display: block; margin-bottom: 4px; }
+.feedback .ok { color: var(--accent-dark); }
+.feedback .ng { color: var(--wrong); }
+.clause { font-size: 14px; color: var(--muted); margin: 6px 0 0; }
+
+.btn {
+  display: inline-block;
+  font: inherit;
+  font-weight: 500;
+  font-size: 16px;
+  padding: 11px 22px;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  text-decoration: none;
+}
+.btn:hover { background: var(--accent-dark); }
+.btn.secondary { background: transparent; color: var(--accent-dark); border: 1.5px solid var(--accent); }
+.btn.secondary:hover { background: var(--accent-soft); }
+
+.option:focus-visible, .btn:focus-visible, .back:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 20px; }
+
+/* ---------- 結果 ---------- */
+.score { font-size: 52px; font-weight: 700; color: var(--accent); line-height: 1.2; margin: 8px 0; }
+.score small { font-size: 20px; color: var(--muted); font-weight: 500; margin-left: 8px; }
+
+.review { list-style: none; padding: 0; margin: 24px 0 0; }
+.review li { padding: 12px 0; border-top: 1px solid var(--line); font-size: 15px; }
+.review .mark { font-weight: 700; margin-right: 6px; }
+.review .mark.ok { color: var(--accent-dark); }
+.review .mark.ng { color: var(--wrong); }
+.review .detail { color: var(--muted); display: block; margin-top: 2px; }
+
+@media (max-width: 480px) {
+  .wrap { padding-top: 24px; }
+  h1 { font-size: 24px; }
+  .panel { padding: 22px 18px; }
+  .question { font-size: 18px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .progress-bar { transition: none; }
+}
+
+/* ---------- 考試模式：已選擇 ---------- */
+.option.selected { border-color: var(--accent); background: var(--accent-soft); font-weight: 500; }
+
+/* ---------- 結果：分數與錯誤說明 ---------- */
+.tally { font-size: 17px; margin-bottom: 4px; }
+.tally .ok, .answers .ok { color: var(--accent-dark); }
+.tally .ng, .answers .ng { color: var(--wrong); }
+
+.result-section { margin-top: 16px; }
+.result-section h2 { margin-bottom: 12px; }
+.all-right { color: var(--accent-dark); margin: 0; }
+
+.wrong-list { list-style: none; padding: 0; margin: 0; }
+.wrong-item { padding: 16px 0; border-top: 1px solid var(--line); }
+.wrong-item:first-child { border-top: none; padding-top: 4px; }
+.wrong-no { font-size: 14px; color: var(--muted); margin-bottom: 4px; }
+.wrong-no span { margin-left: 10px; padding: 1px 8px; border-radius: 4px; background: var(--scenario); }
+.wrong-scenario { font-size: 15px; color: var(--muted); border-left: 3px solid var(--line); padding-left: 10px; }
+.wrong-q { font-weight: 500; margin-bottom: 8px; }
+
+.answers { margin: 0 0 8px; display: grid; gap: 4px; }
+.answers div { display: flex; gap: 10px; }
+.answers dt { flex: 0 0 4.5em; color: var(--muted); font-size: 15px; }
+.answers dd { margin: 0; }
+
+.explain { background: var(--scenario); border-radius: 8px; padding: 10px 14px; margin: 0; font-size: 15px; }
+.explain strong { display: block; font-size: 14px; color: var(--muted); font-weight: 500; }
+
+details summary { cursor: pointer; font-weight: 500; color: var(--accent-dark); }
+details summary:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+details .review { margin-top: 12px; }
+
+/* ---------- 稽核模擬 ---------- */
+h2.sub { font-size: 18px; color: var(--accent-dark); margin: 26px 0 10px; }
+
+.steps { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; font-size: 13px; }
+.step { padding: 3px 10px; border-radius: 12px; background: var(--panel); border: 1px solid var(--line); color: var(--muted); }
+.step.on { background: var(--accent); border-color: var(--accent); color: #fff; }
+.step.done { background: var(--accent-soft); border-color: var(--accent-soft); color: var(--accent-dark); }
+
+.pick-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 10px; margin-top: 8px; }
+.pick { display: block; border: 1.5px solid var(--line); border-radius: 10px; padding: 12px 14px; cursor: pointer; }
+.pick:hover { border-color: var(--accent); background: var(--scenario); }
+.pick input { margin-right: 8px; accent-color: var(--accent); }
+.pick strong { font-weight: 500; }
+.pick small { display: block; color: var(--muted); margin: 2px 0 6px; line-height: 1.5; }
+.pick:focus-within { outline: 3px solid var(--accent); outline-offset: 2px; }
+
+.clause-tag { display: inline-block; background: var(--accent-soft); color: var(--accent-dark); padding: 1px 10px; border-radius: 12px; font-size: 13px; }
+.section-tag { display: inline-block; background: var(--accent); color: #fff; padding: 2px 12px; border-radius: 12px; font-size: 13px; margin: 0 6px 6px 0; }
+
+table.info { width: 100%; border-collapse: collapse; font-size: 15px; }
+table.info th, table.info td { border-bottom: 1px solid var(--line); padding: 9px 8px; text-align: left; vertical-align: top; }
+table.info th { color: var(--muted); font-weight: 500; width: 36%; }
+
+.scenario.warn { background: #fbf3de; border-left-color: #c9a227; }
+
+.doc { border: 1px solid var(--line); border-radius: 10px; margin: 10px 0; overflow: hidden; }
+.doc-title { display: flex; justify-content: space-between; align-items: center; gap: 10px; width: 100%; font: inherit; font-weight: 500; text-align: left; padding: 12px 16px; background: var(--scenario); color: var(--ink); border: none; cursor: pointer; }
+.doc-title span { font-size: 13px; color: var(--muted); font-weight: 400; }
+.doc-title:hover { background: var(--accent-soft); }
+.doc-content { padding: 14px 16px; display: none; font-size: 15px; }
+.doc.open .doc-content { display: block; }
+
+.dialogue { padding: 11px 15px; border-radius: 10px; margin: 8px 0; font-size: 15px; }
+.dialogue strong { display: block; font-size: 13px; color: var(--muted); font-weight: 500; }
+.dialogue.auditor { background: #e9f0f7; }
+.dialogue.employee { background: var(--accent-soft); }
+
+.a-q { border-top: 1px solid var(--line); padding: 18px 0 6px; }
+.a-q .question { font-size: 17px; margin: 8px 0 12px; }
+.a-option { display: flex; gap: 10px; align-items: flex-start; padding: 11px 14px; border: 1.5px solid var(--line); border-radius: 10px; margin: 8px 0; cursor: pointer; line-height: 1.55; }
+.a-option:hover { border-color: var(--accent); }
+.a-option input { margin-top: 5px; accent-color: var(--accent); }
+.a-option:focus-within { outline: 3px solid var(--accent); outline-offset: 2px; }
+
+.cat-row { margin: 16px 0; }
+.cat-row .num { float: right; color: var(--muted); font-size: 15px; }
+
+.a-review { border-left: 4px solid var(--accent); background: var(--scenario); border-radius: 0 10px 10px 0; padding: 14px 16px; margin: 14px 0; }
+.a-review.wrong { border-left-color: var(--wrong); background: #f9eceb; }
+.a-review .wrong-q { margin-bottom: 10px; }
+.explain.tip { background: #fbf3de; margin-top: 8px; }
+
+/* ---------- 行業別選擇 ---------- */
+.industry-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin-top: 12px; }
+.industry { font: inherit; font-weight: 500; font-size: 16px; text-align: center; padding: 20px 10px; background: var(--panel); color: var(--ink); border: 1.5px solid var(--line); border-radius: 12px; cursor: pointer; }
+.industry:hover { border-color: var(--accent); background: var(--scenario); }
+.industry.selected { border-color: var(--accent); background: var(--accent-soft); color: var(--accent-dark); }
+.industry-icon { display: block; font-size: 30px; margin-bottom: 6px; }
+.cat-row .muted { color: var(--muted); }
+.panel .lead { margin-top: 0; }
+
+/* ---------- 進階版：情境與文件表格 ---------- */
+.card h2 .level { font-size: 13px; font-weight: 500; background: var(--accent-soft); color: var(--accent-dark); padding: 2px 10px; border-radius: 12px; margin-left: 8px; vertical-align: middle; }
+
+.context { background: var(--scenario); border: 1px solid var(--line); border-radius: 8px; padding: 10px 14px; margin: 10px 0 12px; font-size: 15px; }
+.a-review .context { background: #fff; }
+
+.doc-meta { background: var(--scenario); border: 1px solid var(--line); border-radius: 6px; padding: 8px 12px; margin-bottom: 12px; font-size: 14px; color: var(--muted); }
+.doc-content { overflow-x: auto; }
+.doc-table { width: 100%; border-collapse: collapse; margin: 10px 0; font-size: 14px; }
+.doc-table th, .doc-table td { border: 1px solid var(--line); padding: 8px 9px; text-align: left; white-space: nowrap; }
+.doc-table th { background: var(--scenario); font-weight: 500; }
+.doc-content p { font-size: 15px; }
+
+.explain.evidence { background: #e9f0f7; margin-top: 8px; }
+.explain.thinking { background: #f2f0fa; margin-top: 8px; }
+h1 .level { font-size: 14px; font-weight: 500; background: var(--accent-soft); color: var(--accent-dark); padding: 3px 12px; border-radius: 12px; margin-left: 10px; vertical-align: middle; }
+
+</style>
+</head>
+<body>
+<main id="app" class="wrap"></main>
+
+<script>
+/* ==========================================================
+   資料區：要修改題目或內容，改這一段就好
+   ========================================================== */
+// ============================================
+// 網站共用文字設定（首頁標題、頁尾等）
+// ============================================
+const SITE = {
+  title: "ISO 50001 能源管理系統 自我測驗",
+  intro: "依據 ISO 50001:2018，供內部訓練使用。",
+  footer: "本測驗內容為訓練用摘要與情境設計，並非標準原文，條文要求請以正式標準為準。",
+
+  // 是否在作答者自己的瀏覽器記住練習紀錄（不會上傳到任何地方）
+  rememberProgress: true,
+
+  // 結果頁評語：依分數（100 分制）由高到低判斷
+  comments: [
+    { min: 90, text: "非常熟悉，掌握得很好。" },
+    { min: 70, text: "大致掌握，建議回顧下方答錯的題目。" },
+    { min: 0,  text: "建議再複習相關條文後重新測驗。" }
+  ]
+};
+// ============================================
+// 條文架構測驗題庫（共 100 題）
+// answer：正確答案在 options 中的位置，從 0 開始算
+// clause 開頭的數字會自動當作章節，用來分配抽題
+// 「4～10」這類跨章題目會歸在「綜合」
+// ============================================
+const iso50001Questions = [
+
+/* ========== 第4章 組織處境 ========== */
+{ id: 1, clause: "4.1", clauseName: "瞭解組織及其處境",
+  question: "組織建立能源管理系統時，首先應瞭解哪些可能影響能源管理系統預期結果的因素？",
+  options: ["僅能源價格", "內部與外部議題", "僅政府法規", "僅設備使用年限"], answer: 1,
+  explanation: "4.1要求組織確認與其目的相關，且可能影響能源管理系統及能源績效的內部與外部議題。" },
+{ id: 2, clause: "4.1", clauseName: "瞭解組織及其處境",
+  question: "下列何者最可能屬於影響能源管理系統的外部議題？",
+  options: ["設備操作方式", "員工能源管理能力", "政府能源政策變化", "內部組織調整"], answer: 2,
+  explanation: "政府政策、能源市場及外部環境變化均可能屬於外部議題。" },
+{ id: 3, clause: "4.1", clauseName: "瞭解組織及其處境",
+  question: "下列何者較可能屬於能源管理系統的內部議題？",
+  options: ["國際能源價格", "政府能源政策", "廠內設備老舊", "國家能源法規"], answer: 2,
+  explanation: "設備狀況、組織能力、內部資源等通常屬於內部議題。" },
+{ id: 4, clause: "4.2", clauseName: "瞭解利害相關者的需求與期望",
+  question: "組織應確認哪些利害相關者與能源管理系統有關，主要目的為何？",
+  options: ["增加文件數量", "瞭解相關需求及要求", "決定設備品牌", "計算員工人數"], answer: 1,
+  explanation: "應確認與EnMS及能源績效有關的利害相關者，以及其相關需求與期望。" },
+{ id: 5, clause: "4.2", clauseName: "瞭解利害相關者的需求與期望",
+  question: "下列何者可能是能源管理系統的利害相關者？",
+  options: ["主管機關", "客戶", "能源供應商", "以上皆是"], answer: 3,
+  explanation: "主管機關、客戶及能源供應商皆可能對組織能源管理產生相關要求。" },
+{ id: 6, clause: "4.2", clauseName: "瞭解利害相關者的需求與期望",
+  question: "組織對能源相關法令要求應採取何種作法？",
+  options: ["只有驗證前確認", "確認並取得適用要求", "完全交由驗證公司判斷", "只有發生違規時處理"], answer: 1,
+  explanation: "組織需確認與能源效率、能源使用及能源消耗相關的適用法令及其他要求。" },
+{ id: 7, clause: "4.3", clauseName: "決定能源管理系統範疇",
+  question: "決定能源管理系統範疇與邊界時，下列何者應納入考量？",
+  options: ["內外部議題", "利害相關者相關要求", "組織可控制的活動與能源使用", "以上皆是"], answer: 3,
+  explanation: "EnMS範疇需考量組織處境、相關要求以及組織對能源使用與能源績效的控制能力。" },
+{ id: 8, clause: "4.3", clauseName: "決定能源管理系統範疇",
+  question: "能源管理系統的範疇與邊界應如何處理？",
+  options: ["只需口頭說明", "應予以建立並維持相關資訊", "完全由驗證機構決定", "每月重新制定"], answer: 1,
+  explanation: "組織應確定EnMS的範疇及邊界，並維持其文件化資訊。" },
+{ id: 9, clause: "4.3", clauseName: "決定能源管理系統範疇",
+  question: "某工廠將高耗能製程任意排除在能源管理系統範圍之外，最可能涉及哪一條文？",
+  options: ["4.3", "5.2", "7.2", "9.2"], answer: 0,
+  explanation: "能源管理系統範疇及邊界的合理性屬於4.3要求。" },
+{ id: 10, clause: "4.4", clauseName: "能源管理系統",
+  question: "ISO 50001要求組織建立能源管理系統的核心目的之一為何？",
+  options: ["增加程序文件", "持續改善能源績效", "增加設備數量", "降低員工人數"], answer: 1,
+  explanation: "能源管理系統的重要目的之一是持續改善能源績效。" },
+
+/* ========== 第5章 領導 ========== */
+{ id: 11, clause: "5.1", clauseName: "領導與承諾",
+  question: "能源管理系統最終的領導責任主要由誰承擔？",
+  options: ["能源管理人員", "外部顧問", "最高管理階層", "驗證機構"], answer: 2,
+  explanation: "最高管理階層須展現對能源管理系統及能源績效改善的領導與承諾。" },
+{ id: 12, clause: "5.1", clauseName: "領導與承諾",
+  question: "最高管理階層應確保能源管理系統所需資源如何取得？",
+  options: ["只有驗證前提供", "依需求提供必要資源", "由員工自行負擔", "完全交由顧問處理"], answer: 1,
+  explanation: "最高管理階層應確保建立、實施、維持及改善EnMS所需資源可以取得。" },
+{ id: 13, clause: "5.1", clauseName: "領導與承諾",
+  question: "下列何者最能展現最高管理階層對能源管理系統的承諾？",
+  options: ["只在驗證當天參加會議", "確保能源政策、目標及資源與組織方向相符", "將所有工作交給能源管理人員", "只要求降低電費"], answer: 1,
+  explanation: "領導與承諾包含確保能源政策、目標、資源及EnMS要求融入組織運作。" },
+{ id: 14, clause: "5.1", clauseName: "領導與承諾",
+  question: "能源績效改善是否僅為能源管理單位的責任？",
+  options: ["是", "否", "僅大型企業不是", "標準沒有要求"], answer: 1,
+  explanation: "最高管理階層需確保相關角色參與，能源績效改善並非單一部門責任。" },
+{ id: 15, clause: "5.2", clauseName: "能源政策",
+  question: "能源政策應由誰建立？",
+  options: ["外部顧問", "驗證公司", "最高管理階層", "設備供應商"], answer: 2,
+  explanation: "最高管理階層應建立能源政策。" },
+{ id: 16, clause: "5.2", clauseName: "能源政策",
+  question: "能源政策應包含對何者的承諾？",
+  options: ["持續改善能源績效", "增加能源使用", "增加設備採購", "降低產品品質"], answer: 0,
+  explanation: "能源政策需包含持續改善能源績效及EnMS的承諾。" },
+{ id: 17, clause: "5.2", clauseName: "能源政策",
+  question: "能源政策是否應支持能源效率產品與服務的採購？",
+  options: ["是", "否", "只有政府機關需要", "只有能源供應商需要"], answer: 0,
+  explanation: "能源政策應支持採購會影響能源績效的能源效率產品及服務。" },
+{ id: 18, clause: "5.2", clauseName: "能源政策",
+  question: "能源政策是否應支持考量能源績效改善的設計活動？",
+  options: ["是", "否", "只有新建工廠需要", "只有ISO 14001要求"], answer: 0,
+  explanation: "能源政策應支持考量能源績效改善的設計活動。" },
+{ id: 19, clause: "5.3", clauseName: "組織角色、責任及職權",
+  question: "能源管理系統相關角色的責任與職權應如何處理？",
+  options: ["不需界定", "應予以指派並溝通", "全部由顧問負責", "全部由廠長負責"], answer: 1,
+  explanation: "最高管理階層應確保相關角色的責任與職權被指派及溝通。" },
+{ id: 20, clause: "5.3", clauseName: "組織角色、責任及職權",
+  question: "誰應確保能源管理系統符合ISO 50001要求？",
+  options: ["被指派具有相關責任與職權的人員", "客戶", "驗證機構", "能源供應商"], answer: 0,
+  explanation: "最高管理階層應指派相關責任與職權，以確保EnMS符合標準要求。" },
+
+/* ========== 第6章 規劃 ========== */
+{ id: 21, clause: "6.1", clauseName: "處理風險與機會之措施",
+  question: "能源管理系統規劃時，組織應確認什麼？",
+  options: ["風險與機會", "只有財務風險", "只有設備故障", "只有能源價格"], answer: 0,
+  explanation: "規劃EnMS時應確認需要處理的風險與機會。" },
+{ id: 22, clause: "6.1", clauseName: "處理風險與機會之措施",
+  question: "處理風險與機會的主要目的不包含下列何者？",
+  options: ["確保EnMS達成預期結果", "防止或降低非預期影響", "達成持續改善", "增加能源消耗"], answer: 3,
+  explanation: "風險與機會管理是為確保預期結果、降低不利影響並達成持續改善。" },
+{ id: 23, clause: "6.2", clauseName: "目標、能源標的與達成之規劃",
+  question: "能源目標與能源標的應與何者一致？",
+  options: ["能源政策", "設備品牌", "員工人數", "驗證公司要求"], answer: 0,
+  explanation: "能源目標及能源標的應與能源政策一致。" },
+{ id: 24, clause: "6.2", clauseName: "目標、能源標的與達成之規劃",
+  question: "設定能源目標與標的時，下列何者應納入考量？",
+  options: ["重大能源使用", "改善能源績效的機會", "適用要求", "以上皆是"], answer: 3,
+  explanation: "設定及審查能源目標標的時需考量適用要求、SEU及能源績效改善機會等。" },
+{ id: 25, clause: "6.2", clauseName: "目標、能源標的與達成之規劃",
+  question: "行動計畫中通常應明確規劃哪些內容？",
+  options: ["執行事項、資源、責任、完成期限及結果評估方式", "只有預算", "只有負責人", "只有節電量"], answer: 0,
+  explanation: "達成目標及標的的行動計畫應明確規劃執行事項、資源、責任、期限及結果評估方式。" },
+{ id: 26, clause: "6.2", clauseName: "目標、能源標的與達成之規劃",
+  question: "能源目標是否一定只能用kWh表示？",
+  options: ["是", "否", "只有製造業可以", "只有服務業不需要"], answer: 1,
+  explanation: "目標可依組織需求設定，不限定只能以單一能源單位表示。" },
+{ id: 27, clause: "6.3", clauseName: "能源審查",
+  question: "能源審查首先應分析何者？",
+  options: ["能源使用與能源消耗", "員工薪資", "客戶滿意度", "產品售價"], answer: 0,
+  explanation: "能源審查需分析能源使用及能源消耗相關資料。" },
+{ id: 28, clause: "6.3", clauseName: "能源審查",
+  question: "SEU是指什麼？",
+  options: ["重大能源使用", "能源政策", "能源基線", "能源績效指標"], answer: 0,
+  explanation: "SEU為Significant Energy Use，即重大能源使用。" },
+{ id: 29, clause: "6.3", clauseName: "能源審查",
+  question: "組織應依何種方式決定重大能源使用(SEU)？",
+  options: ["隨機選擇", "依組織建立的準則判定", "全部設備皆必須列為SEU", "由驗證員指定"], answer: 1,
+  explanation: "組織應建立適當準則，據以判定重大能源使用。" },
+{ id: 30, clause: "6.3", clauseName: "能源審查",
+  question: "針對重大能源使用，組織應確認下列何者？",
+  options: ["相關變數", "目前能源績效", "影響或從事相關工作的人員", "以上皆是"], answer: 3,
+  explanation: "SEU應確認相關變數、目前能源績效及影響SEU的人員等資訊。" },
+{ id: 31, clause: "6.3", clauseName: "能源審查",
+  question: "下列何者可能是空調系統的相關變數？",
+  options: ["室外溫度", "員工姓名", "設備顏色", "公司成立日期"], answer: 0,
+  explanation: "室外溫度可能直接影響空調能源使用，因此可能屬於相關變數。" },
+{ id: 32, clause: "6.3", clauseName: "能源審查",
+  question: "製造設備的能源使用與產量高度相關時，產量可能被視為什麼？",
+  options: ["相關變數", "能源政策", "靜態因子", "矯正措施"], answer: 0,
+  explanation: "會顯著影響能源績效且經常變動的因素，可作為相關變數。" },
+{ id: 33, clause: "6.3", clauseName: "能源審查",
+  question: "能源審查是否需要確認能源績效改善機會？",
+  options: ["是", "否", "只有外部稽核時需要", "只有設備汰換時需要"], answer: 0,
+  explanation: "能源審查需確認並排序能源績效改善機會。" },
+{ id: 34, clause: "6.3", clauseName: "能源審查",
+  question: "能源審查是否需要估計未來能源使用與能源消耗？",
+  options: ["是", "否", "只有新工廠需要", "只有上市公司需要"], answer: 0,
+  explanation: "能源審查包含估計未來能源使用及能源消耗。" },
+{ id: 35, clause: "6.3", clauseName: "能源審查",
+  question: "當設備、設施或能源系統發生重大變更時，能源審查應如何處理？",
+  options: ["不需處理", "視需要更新能源審查", "五年後再更新", "只通知驗證公司"], answer: 1,
+  explanation: "能源審查應依規劃期間更新，重大設施、設備、系統或製程變更時也應適時更新。" },
+{ id: 36, clause: "6.4", clauseName: "能源績效指標",
+  question: "EnPI是指什麼？",
+  options: ["能源績效指標", "能源基線", "能源政策", "能源審查"], answer: 0,
+  explanation: "EnPI為Energy Performance Indicator，即能源績效指標。" },
+{ id: 37, clause: "6.4", clauseName: "能源績效指標",
+  question: "EnPI主要用途為何？",
+  options: ["衡量與監控能源績效", "計算員工績效", "管理產品品質", "計算營業收入"], answer: 0,
+  explanation: "EnPI用於衡量及監控組織的能源績效。" },
+{ id: 38, clause: "6.4", clauseName: "能源績效指標",
+  question: "下列何者最可能作為製造業的EnPI？",
+  options: ["kWh/產品產量", "員工姓名", "公司地址", "產品售價"], answer: 0,
+  explanation: "單位產量能源使用量是常見的能源績效指標。" },
+{ id: 39, clause: "6.4", clauseName: "能源績效指標",
+  question: "當相關變數顯著影響能源績效時，建立EnPI應如何處理？",
+  options: ["忽略相關變數", "適當考量相關變數", "刪除EnPI", "停止能源管理"], answer: 1,
+  explanation: "若相關變數顯著影響能源績效，建立適當EnPI時應考量相關資料。" },
+{ id: 40, clause: "6.4", clauseName: "能源績效指標",
+  question: "EnPI值通常應與何者進行比較？",
+  options: ["能源基線(EnB)", "能源政策", "內部稽核報告", "組織架構圖"], answer: 0,
+  explanation: "EnPI值應依適當情況與其對應的能源基線進行比較。" },
+{ id: 41, clause: "6.5", clauseName: "能源基線",
+  question: "EnB代表什麼？",
+  options: ["能源基線", "能源績效指標", "重大能源使用", "能源政策"], answer: 0,
+  explanation: "EnB為Energy Baseline，即能源基線。" },
+{ id: 42, clause: "6.5", clauseName: "能源基線",
+  question: "能源基線主要依據何者建立？",
+  options: ["能源審查資訊", "員工意見", "驗證公司建議", "設備供應商報價"], answer: 0,
+  explanation: "能源基線應利用能源審查所得資訊並選擇適當期間建立。" },
+{ id: 43, clause: "6.5", clauseName: "能源基線",
+  question: "當相關變數顯著影響能源績效時，EnPI及EnB可能需要進行什麼處理？",
+  options: ["正規化", "刪除", "停止量測", "改成能源政策"], answer: 0,
+  explanation: "相關變數顯著影響能源績效時，應依需要進行正規化。" },
+{ id: 44, clause: "6.5", clauseName: "能源基線",
+  question: "下列何種情況可能需要調整能源基線？",
+  options: ["EnPI已無法反映能源績效", "靜態因子發生重大改變", "依預先決定的方法需要調整", "以上皆是"], answer: 3,
+  explanation: "ISO 50001規定上述情況均可能需要修訂EnB。" },
+{ id: 45, clause: "6.5", clauseName: "能源基線",
+  question: "工廠新增一條大型生產線，使能源使用型態發生重大改變，最可能需要重新檢討何者？",
+  options: ["能源基線", "員工制服", "客戶名單", "公司名稱"], answer: 0,
+  explanation: "重大靜態因子改變可能使原能源基線不再適用。" },
+{ id: 46, clause: "6.6", clauseName: "能源資料蒐集規劃",
+  question: "能源資料蒐集計畫應與哪些條件相適應？",
+  options: ["組織規模", "複雜程度及資源", "量測與監控設備", "以上皆是"], answer: 3,
+  explanation: "資料蒐集計畫應依組織規模、複雜度、資源及量測設備等條件規劃。" },
+{ id: 47, clause: "6.6", clauseName: "能源資料蒐集規劃",
+  question: "能源資料蒐集計畫應說明什麼？",
+  options: ["需要蒐集的資料及蒐集頻率", "員工薪資", "公司營業額", "客戶數量"], answer: 0,
+  explanation: "資料蒐集計畫應界定必要資料，以及如何與多常蒐集及保存資料。" },
+{ id: 48, clause: "6.6", clauseName: "能源資料蒐集規劃",
+  question: "下列何者屬於應考量蒐集的能源資料？",
+  options: ["SEU相關變數", "SEU能源消耗", "SEU操作準則", "以上皆是"], answer: 3,
+  explanation: "SEU相關變數、能源消耗及操作準則均屬重要能源資料。" },
+{ id: 49, clause: "6.6", clauseName: "能源資料蒐集規劃",
+  question: "若適用，能源資料蒐集內容還應包含下列何者？",
+  options: ["靜態因子", "員工生日", "客戶地址", "公司Logo"], answer: 0,
+  explanation: "若適用，資料蒐集應包含影響能源績效的靜態因子。" },
+{ id: 50, clause: "6.6", clauseName: "能源資料蒐集規劃",
+  question: "用於量測能源績效關鍵特性的設備，應特別注意什麼？",
+  options: ["外觀漂亮", "資料準確性與重複性", "品牌相同", "價格最高"], answer: 1,
+  explanation: "組織應確保相關量測設備提供適當準確且可重複的資料。" },
+
+/* ========== 第7章 支援 ========== */
+{ id: 51, clause: "7.1", clauseName: "資源",
+  question: "組織應提供哪些資源以建立及改善能源管理系統？",
+  options: ["必要的人力與相關資源", "只有財務資源", "只有外部顧問", "不需要資源"], answer: 0,
+  explanation: "組織需決定並提供建立、實施、維持及持續改善EnMS所需資源。" },
+{ id: 52, clause: "7.2", clauseName: "能力",
+  question: "對影響能源績效及EnMS的人員，組織應確保其具備什麼？",
+  options: ["適當能力", "高學歷", "十年以上年資", "主管職位"], answer: 0,
+  explanation: "組織應確保相關人員依教育、訓練、技能或經驗具備必要能力。" },
+{ id: 53, clause: "7.2", clauseName: "能力",
+  question: "若發現人員能力不足，組織較適當的作法為何？",
+  options: ["不處理", "採取訓練或其他措施取得所需能力", "直接停止EnMS", "等外部稽核再處理"], answer: 1,
+  explanation: "組織需採取措施取得必要能力，並評估所採措施的有效性。" },
+{ id: 54, clause: "7.2", clauseName: "能力",
+  question: "能力證明是否可以包含教育、訓練、技能或經驗？",
+  options: ["是", "否", "只能用證照", "只能用學歷"], answer: 0,
+  explanation: "人員能力可依適當教育、訓練、技能或經驗加以證明。" },
+{ id: 55, clause: "7.3", clauseName: "認知",
+  question: "相關人員應瞭解下列何者？",
+  options: ["能源政策", "自身對EnMS有效性的貢獻", "不符合要求可能造成的影響", "以上皆是"], answer: 3,
+  explanation: "認知要求包含能源政策、個人貢獻及未符合要求可能造成的影響。" },
+{ id: 56, clause: "7.3", clauseName: "認知",
+  question: "員工是否應瞭解其活動如何影響能源績效？",
+  options: ["是", "否", "只有主管需要", "只有能源管理人員需要"], answer: 0,
+  explanation: "從事影響能源績效工作的人員應具有相應的能源績效認知。" },
+{ id: 57, clause: "7.4", clauseName: "溝通",
+  question: "組織建立能源管理溝通機制時，應決定什麼？",
+  options: ["溝通什麼", "何時及與誰溝通", "如何溝通", "以上皆是"], answer: 3,
+  explanation: "溝通規劃應界定溝通內容、時間、對象及方式等。" },
+{ id: 58, clause: "7.4", clauseName: "溝通",
+  question: "能源管理相關溝通是否只有對內溝通？",
+  options: ["是", "否，依需求包含內部與外部溝通", "只有外部", "標準禁止外部溝通"], answer: 1,
+  explanation: "組織應依EnMS需求建立內部及外部溝通安排。" },
+{ id: 59, clause: "7.5", clauseName: "文件化資訊",
+  question: "能源管理系統文件化資訊主要包含哪些？",
+  options: ["標準要求的文件化資訊", "組織認為EnMS有效運作所需資訊", "以上皆是", "只有能源手冊"], answer: 2,
+  explanation: "文件化資訊包含標準要求及組織認為EnMS有效性所需的資訊。" },
+{ id: 60, clause: "7.5", clauseName: "文件化資訊",
+  question: "建立或更新文件時，應適當考量什麼？",
+  options: ["識別與描述", "格式與媒介", "審查及核准", "以上皆是"], answer: 3,
+  explanation: "文件建立及更新應適當控制識別、格式、媒介、審查及核准等事項。" },
+{ id: 61, clause: "7.5", clauseName: "文件化資訊",
+  question: "文件化資訊是否一定只能使用紙本？",
+  options: ["是", "否", "只有紀錄可以電子化", "只有程序書可以電子化"], answer: 1,
+  explanation: "文件化資訊可採各種適當媒介，不限於紙本。" },
+{ id: 62, clause: "7.5", clauseName: "文件化資訊",
+  question: "對外來文件，如法規或設備操作手冊，若為EnMS運作所需，應如何處理？",
+  options: ["不需管理", "適當識別並控制", "全部銷毀", "只由顧問保管"], answer: 1,
+  explanation: "EnMS規劃及運作所需的外部來源文件化資訊應適當識別並受到控制。" },
+
+/* ========== 第8章 運作 ========== */
+{ id: 63, clause: "8.1", clauseName: "運作規劃與管制",
+  question: "組織對重大能源使用相關作業應採取何種方式？",
+  options: ["依建立的準則進行運作與管制", "完全自由操作", "只有稽核前控制", "不需設定任何條件"], answer: 0,
+  explanation: "與SEU及能源績效相關的作業應建立適當準則並依其實施控制。" },
+{ id: 64, clause: "8.1", clauseName: "運作規劃與管制",
+  question: "操作準則的主要目的之一為何？",
+  options: ["避免重大偏離預期能源績效", "增加能源使用", "增加文件", "降低產品品質"], answer: 0,
+  explanation: "適當的運作準則可避免因缺乏控制造成能源績效的重大偏離。" },
+{ id: 65, clause: "8.1", clauseName: "運作規劃與管制",
+  question: "重大能源使用設備的操作條件應如何管理？",
+  options: ["建立並實施適當操作準則", "由操作員自行決定", "不需管理", "只需記錄設備名稱"], answer: 0,
+  explanation: "SEU相關運作應依適當操作及維護準則進行控制。" },
+{ id: 66, clause: "8.1", clauseName: "運作規劃與管制",
+  question: "組織外包與重大能源使用相關的製程時，是否仍需考量控制？",
+  options: ["是", "否", "完全由承包商負責", "只有政府要求時需要"], answer: 0,
+  explanation: "外包過程若與SEU或能源績效有關，仍應確保受到適當控制。" },
+{ id: 67, clause: "8.2", clauseName: "設計",
+  question: "設計新的設施、設備、系統或能源使用製程時，何時應考量能源績效改善機會？",
+  options: ["設計階段", "設備報廢後", "驗證完成後", "完全不需要"], answer: 0,
+  explanation: "對預期在使用期間可能顯著影響能源績效的設計活動，應考量能源績效改善機會。" },
+{ id: 68, clause: "8.2", clauseName: "設計",
+  question: "設計活動的能源績效評估結果應如何處理？",
+  options: ["適當納入設計活動", "完全忽略", "只口頭告知", "驗證後再考慮"], answer: 0,
+  explanation: "能源績效評估結果應適當納入相關設計、規格及採購活動。" },
+{ id: 69, clause: "8.3", clauseName: "採購",
+  question: "採購預期會對能源績效產生重大影響的設備時，應考量什麼？",
+  options: ["能源績效", "能源使用與消耗", "使用期間的能源表現", "以上皆是"], answer: 3,
+  explanation: "採購重大能源使用相關產品、設備及服務時應評估能源績效相關因素。" },
+{ id: 70, clause: "8.3", clauseName: "採購",
+  question: "組織是否應將能源績效相關採購要求適當傳達給供應商？",
+  options: ["是", "否", "只有國營企業需要", "只有設備超過一定金額才需要"], answer: 0,
+  explanation: "對可能影響SEU的採購，應適當告知供應商能源績效相關要求。" },
+{ id: 71, clause: "8.3", clauseName: "採購",
+  question: "採購能源時，組織是否可以建立能源採購規格？",
+  options: ["是", "否", "ISO 50001禁止", "只能由政府制定"], answer: 0,
+  explanation: "組織應依適用情況建立及實施能源採購相關規格。" },
+
+/* ========== 第9章 績效評估 ========== */
+{ id: 72, clause: "9.1", clauseName: "監督、量測、分析與評估",
+  question: "組織應定期監督及量測什麼？",
+  options: ["影響能源績效的關鍵特性", "只有員工出勤", "只有營業收入", "只有產品產量"], answer: 0,
+  explanation: "應依規劃期間監督、量測、分析及評估能源績效及EnMS。" },
+{ id: 73, clause: "9.1", clauseName: "監督、量測、分析與評估",
+  question: "下列何者可能屬於能源績效的關鍵特性？",
+  options: ["重大能源使用", "EnPI", "行動計畫成效", "以上皆是"], answer: 3,
+  explanation: "SEU、EnPI及行動計畫成效等皆可能屬於需監督分析的重要內容。" },
+{ id: 74, clause: "9.1", clauseName: "監督、量測、分析與評估",
+  question: "實際能源消耗與預期相比出現重大偏差時，組織應如何處理？",
+  options: ["忽略", "調查並適當回應", "刪除數據", "修改能源政策即可"], answer: 1,
+  explanation: "能源績效發生重大偏差時應進行調查及適當回應。" },
+{ id: 75, clause: "9.1", clauseName: "監督、量測、分析與評估",
+  question: "能源績效改善通常可透過何者判斷？",
+  options: ["比較EnPI與EnB", "比較員工人數", "比較產品售價", "比較公司Logo"], answer: 0,
+  explanation: "能源績效改善通常透過EnPI值與適當能源基線進行比較及評估。" },
+{ id: 76, clause: "9.1", clauseName: "監督、量測、分析與評估",
+  question: "組織是否應定期評估適用法令及其他要求的符合情形？",
+  options: ["是", "否", "只有發生違規時", "只有驗證前"], answer: 0,
+  explanation: "組織需依規劃期間評估能源相關法令及其他要求的符合情形。" },
+{ id: 77, clause: "9.1", clauseName: "監督、量測、分析與評估",
+  question: "監督與量測結果是否需要保留適當的文件化資訊？",
+  options: ["是", "否", "只有異常才需要", "只有外部稽核資料需要"], answer: 0,
+  explanation: "組織需保留適當文件化資訊作為監督、量測、分析及評估結果的證據。" },
+{ id: 78, clause: "9.2", clauseName: "內部稽核",
+  question: "內部稽核的主要目的之一為何？",
+  options: ["確認EnMS是否符合組織自身及ISO 50001要求", "計算員工薪資", "決定設備採購品牌", "增加文件數量"], answer: 0,
+  explanation: "內部稽核需確認EnMS是否符合組織自身要求及標準要求，並有效實施與維持。" },
+{ id: 79, clause: "9.2", clauseName: "內部稽核",
+  question: "內部稽核是否需要依規劃的時間間隔執行？",
+  options: ["是", "否", "只有驗證前", "每十年一次即可"], answer: 0,
+  explanation: "組織應依規劃的時間間隔執行內部稽核。" },
+{ id: 80, clause: "9.2", clauseName: "內部稽核",
+  question: "規劃內部稽核方案時應考量什麼？",
+  options: ["相關過程的重要性", "影響能源績效的過程", "前次稽核結果", "以上皆是"], answer: 3,
+  explanation: "稽核方案應考量相關過程的重要性、能源績效影響及先前稽核結果。" },
+{ id: 81, clause: "9.2", clauseName: "內部稽核",
+  question: "選擇內部稽核員時，應特別確保什麼？",
+  options: ["稽核過程的客觀性與公正性", "一定是最高主管", "一定是外部人員", "一定具有十年經驗"], answer: 0,
+  explanation: "稽核員選擇及稽核執行需確保稽核過程客觀及公正。" },
+{ id: 82, clause: "9.2", clauseName: "內部稽核",
+  question: "內部稽核結果應向誰報告？",
+  options: ["相關管理階層", "只有外部顧問", "只有設備商", "不需報告"], answer: 0,
+  explanation: "內部稽核結果應向相關管理階層報告。" },
+{ id: 83, clause: "9.2", clauseName: "內部稽核",
+  question: "內部稽核發現不符合事項後，組織應如何處理？",
+  options: ["採取適當矯正與矯正措施", "直接刪除稽核紀錄", "等待下次驗證", "不需處理"], answer: 0,
+  explanation: "稽核發現的問題應依適當程序進行矯正及矯正措施。" },
+{ id: 84, clause: "9.3", clauseName: "管理審查",
+  question: "管理審查應由誰執行？",
+  options: ["最高管理階層", "設備供應商", "驗證機構", "客戶"], answer: 0,
+  explanation: "最高管理階層應依規劃期間審查能源管理系統。" },
+{ id: 85, clause: "9.3", clauseName: "管理審查",
+  question: "管理審查的主要目的為何？",
+  options: ["確認EnMS持續適用、充分、有效並與策略方向一致", "只確認電費", "只確認設備數量", "只確認稽核日期"], answer: 0,
+  explanation: "管理審查用以確認EnMS持續的適用性、充分性及有效性等。" },
+{ id: 86, clause: "9.3", clauseName: "管理審查",
+  question: "管理審查輸入應包含下列何者？",
+  options: ["先前管理審查措施的追蹤", "能源績效資訊", "內部稽核結果", "以上皆是"], answer: 3,
+  explanation: "上述項目均屬管理審查常見且重要的輸入內容。" },
+{ id: 87, clause: "9.3", clauseName: "管理審查",
+  question: "管理審查是否應檢討能源政策？",
+  options: ["是", "否", "只有第一次導入需要", "只有政策違反法規時"], answer: 0,
+  explanation: "管理審查需適當檢討能源政策。" },
+{ id: 88, clause: "9.3", clauseName: "管理審查",
+  question: "管理審查是否應檢討能源目標與標的達成程度？",
+  options: ["是", "否", "只有未達成才需要", "只有外部驗證時需要"], answer: 0,
+  explanation: "目標與能源標的達成程度屬管理審查的重要資訊。" },
+{ id: 89, clause: "9.3", clauseName: "管理審查",
+  question: "下列何者可能屬於管理審查輸出？",
+  options: ["持續改善機會的決定", "EnMS變更需求", "資源需求", "以上皆是"], answer: 3,
+  explanation: "管理審查輸出應反映改善機會、系統變更及資源等相關決定。" },
+{ id: 90, clause: "9.3", clauseName: "管理審查",
+  question: "管理審查結果是否應保留文件化資訊？",
+  options: ["是", "否", "只有驗證當年", "只有不符合時"], answer: 0,
+  explanation: "管理審查結果需保留適當文件化資訊作為執行證據。" },
+
+/* ========== 第10章 改善 ========== */
+{ id: 91, clause: "10.1", clauseName: "不符合事項與矯正措施",
+  question: "發生不符合事項時，組織首先應如何處理？",
+  options: ["對不符合事項作出反應並適當控制與矯正", "刪除紀錄", "等待驗證機構處理", "完全忽略"], answer: 0,
+  explanation: "發生不符合事項時應及時反應，進行控制、矯正並處理相關後果。" },
+{ id: 92, clause: "10.1", clauseName: "不符合事項與矯正措施",
+  question: "矯正措施的重要目的之一為何？",
+  options: ["消除不符合原因，避免再次發生", "增加文件", "增加能源使用", "隱藏問題"], answer: 0,
+  explanation: "矯正措施重點在處理造成不符合的原因，以避免再次發生或於其他地方發生。" },
+{ id: 93, clause: "10.1", clauseName: "不符合事項與矯正措施",
+  question: "進行矯正措施前，通常需要評估什麼？",
+  options: ["不符合原因", "是否存在類似問題", "是否可能在其他地方發生", "以上皆是"], answer: 3,
+  explanation: "需分析原因並確認是否存在或可能發生類似不符合。" },
+{ id: 94, clause: "10.1", clauseName: "不符合事項與矯正措施",
+  question: "完成矯正措施後，是否應審查措施有效性？",
+  options: ["是", "否", "只有重大缺失需要", "只有外部稽核要求才需要"], answer: 0,
+  explanation: "組織應審查所採矯正措施的有效性。" },
+{ id: 95, clause: "10.1", clauseName: "不符合事項與矯正措施",
+  question: "矯正措施是否應與不符合事項造成的影響程度相適應？",
+  options: ["是", "否", "所有問題都使用相同措施", "標準未涉及"], answer: 0,
+  explanation: "矯正措施應與所遭遇不符合的影響程度相適應。" },
+{ id: 96, clause: "10.2", clauseName: "持續改善",
+  question: "ISO 50001要求組織持續改善什麼？",
+  options: ["能源管理系統的適用性、充分性及有效性", "只有文件數量", "只有設備數量", "只有員工人數"], answer: 0,
+  explanation: "組織需持續改善EnMS的適用性、充分性及有效性。" },
+{ id: 97, clause: "10.2", clauseName: "持續改善",
+  question: "ISO 50001除了改善管理系統外，還特別要求持續改善何者？",
+  options: ["能源績效", "員工數量", "產品種類", "公司規模"], answer: 0,
+  explanation: "持續改善能源績效是ISO 50001的核心要求之一。" },
+
+/* ========== 綜合題 ========== */
+{ id: 98, clause: "6.3 / 6.4 / 6.5", clauseName: "能源審查、EnPI與EnB",
+  question: "下列哪一個邏輯順序最符合能源績效管理概念？",
+  options: ["能源審查 → 確認SEU → 建立EnPI → 建立EnB → 評估能源績效", "EnB → 能源政策 → SEU → 稽核", "內部稽核 → EnPI → 能源審查", "管理審查 → EnB → 能源政策"], answer: 0,
+  explanation: "能源審查提供建立SEU、EnPI及EnB的重要基礎資訊，之後才能進一步評估能源績效。" },
+{ id: 99, clause: "4～10", clauseName: "PDCA架構",
+  question: "ISO 50001採用何種管理循環概念推動能源管理系統持續改善？",
+  options: ["PDCA", "SWOT", "5S", "FIFO"], answer: 0,
+  explanation: "ISO 50001能源管理系統以PDCA持續改善概念運作。" },
+{ id: 100, clause: "4～10", clauseName: "整體條文架構",
+  question: "下列哪一組最能代表ISO 50001:2018第4至10章的主要架構？",
+  options: ["組織處境、領導、規劃、支援、運作、績效評估、改善", "採購、生產、銷售、財務、人資", "品質、環境、安全、財務、資訊", "設備、產品、客戶、供應商、員工"], answer: 0,
+  explanation: "ISO 50001:2018第4至10章依序涵蓋組織處境、領導、規劃、支援、運作、績效評估及改善。" }
+
+];
+// ============================================
+// 條文架構測驗：設定
+// 題目本身放在 data/clause-bank.js
+// ============================================
+const CLAUSE_QUIZ = {
+  title: "條文架構測驗",
+  description: "確認是否了解 ISO 50001:2018 第 4 至 10 章的架構、重要名詞與各條文重點。",
+  audience: "能源管理團隊成員",
+
+  bank: iso50001Questions, // 題庫來源（data/clause-bank.js）
+
+  questionCount: 25,     // 每次隨機抽出幾題
+  minPerChapter: 1,      // 每個章節至少抽幾題，設為 0 代表完全隨機
+  shuffleOptions: true,  // 打亂選項順序（含「以上皆是」的題目會自動保持原順序）
+
+  // 作答回饋方式
+  // "end"：作答過程不顯示對錯，全部答完才公布分數與錯誤說明
+  // "instant"：每題作答後立即顯示對錯與說明
+  feedbackMode: "end"
+};
+// ============================================
+// 內部稽核模擬測驗（基礎版）
+// ============================================
+const AUDIT_BASIC = {
+
+  id: "audit",
+  title: "內部稽核模擬測驗",
+  level: "基礎版",
+  description: "文件審查 × 模擬訪談 × 稽核判斷 × 正解解析，練習找出文件與實際執行的落差。",
+  audience: "初次擔任內部稽核員、各單位受稽人員",
+
+  // 各行業共用的公司資料與情境
+  company: {
+    employees: "約 320 人",
+    extraRows: [["能源管理系統", "ISO 50001:2018"]],
+    situation: "今天為公司年度 ISO 50001 能源管理系統內部稽核日。請先瞭解模擬公司的基本狀況，後續將提供文件及人員訪談紀錄。"
+  },
+
+  notes: {
+    start: "本測驗內容為教育訓練用模擬案例，實際能源使用與重大能源使用仍應依各工廠實際狀況判定。",
+    docs: "文件中可能存在正常資訊，也可能存在需要進一步查證的情況，不需看到異常就立即判定為不符合。",
+    quiz: "請依模擬公司的背景、文件、訪談內容及 ISO 50001 要求判斷。"
+  },
+
+  // ---------- 行業別 ----------
+  industries: [
+    { id: "chemical", name: "化工業", icon: "⚗️",
+      company: "永續化學材料股份有限公司",
+      process: "原料處理 → 反應 → 分離 → 純化 → 包裝",
+      energy: "電力、天然氣、蒸汽",
+      equipment: "反應槽、鍋爐、空壓機、冰水機、泵浦",
+      seu: "蒸汽系統、冰水系統、反應製程" },
+
+    { id: "basicMetal", name: "金屬基本工業", icon: "🔥",
+      company: "永續金屬股份有限公司",
+      process: "原料 → 熔煉 → 鑄造 → 熱處理 → 加工",
+      energy: "電力、天然氣",
+      equipment: "熔解爐、熱處理爐、空壓機、冷卻系統",
+      seu: "熔煉製程、熱處理製程、空壓系統" },
+
+    { id: "nonMetal", name: "非金屬礦業", icon: "⛰️",
+      company: "永續非金屬材料股份有限公司",
+      process: "原料 → 破碎 → 研磨 → 燒成 → 成品",
+      energy: "電力、天然氣",
+      equipment: "破碎機、研磨機、窯爐、風機",
+      seu: "窯爐系統、研磨系統、風機系統" },
+
+    { id: "food", name: "食品業", icon: "🍱",
+      company: "永續食品股份有限公司",
+      process: "原料 → 前處理 → 加熱／冷卻 → 加工 → 包裝",
+      energy: "電力、天然氣、蒸汽",
+      equipment: "冷凍機、冷藏庫、鍋爐、空壓機、生產設備",
+      seu: "冷凍冷藏系統、蒸汽系統、生產製程" },
+
+    { id: "textile", name: "紡織業", icon: "🧵",
+      company: "永續紡織股份有限公司",
+      process: "原料 → 織造 → 染整 → 烘乾 → 定型",
+      energy: "電力、天然氣、蒸汽",
+      equipment: "染整設備、定型機、鍋爐、空壓機",
+      seu: "染整製程、蒸汽系統、定型設備" },
+
+    { id: "paper", name: "造紙業", icon: "📄",
+      company: "永續紙業股份有限公司",
+      process: "製漿 → 調漿 → 抄紙 → 壓榨 → 乾燥 → 成品",
+      energy: "電力、天然氣、蒸汽",
+      equipment: "紙機、鍋爐、泵浦、風機、空壓機",
+      seu: "紙機系統、蒸汽系統、泵浦系統" },
+
+    { id: "electronics", name: "電機電子業", icon: "💻",
+      company: "永續電子科技股份有限公司",
+      process: "原料 → 製程加工 → 清洗 → 組裝 → 測試",
+      energy: "電力",
+      equipment: "冰水機、空壓機、空調系統、真空設備、製程設備",
+      seu: "冰水系統、空壓系統、空調系統、主要製程設備" },
+
+    { id: "other", name: "其他製造業", icon: "🏭",
+      company: "永續製造股份有限公司",
+      process: "原料 → 加工 → 組裝 → 檢驗 → 包裝",
+      energy: "電力、天然氣",
+      equipment: "空壓機、冰水機、空調系統、生產設備",
+      seu: "空壓系統、冰水系統、主要生產設備" }
+  ],
+
+  // ---------- 負責項目 ----------
+  responsibilities: [
+    { id: "energyReview", name: "能源審查", description: "能源使用分析、SEU、相關變數及改善機會", clauses: "6.3" },
+    { id: "enpi", name: "EnPI／EnB 管理", description: "能源績效指標、能源基線、正規化與調整", clauses: "6.4、6.5" },
+    { id: "target", name: "能源目標與行動計畫", description: "能源目標、標的、行動方案及成效追蹤", clauses: "6.2" },
+    { id: "monitor", name: "能源數據與監督量測", description: "能源資料蒐集、監測、分析及異常管理", clauses: "6.6、9.1" },
+    { id: "seu", name: "SEU 操作管理", description: "重大能源使用設備操作條件及運作管制", clauses: "8.1" },
+    { id: "maintenance", name: "設備維護保養", description: "能源相關設備維護及運轉管理", clauses: "8.1" },
+    { id: "measurement", name: "量測設備管理", description: "電表、流量計、溫度計等量測設備管理", clauses: "6.6、9.1" },
+    { id: "design", name: "設計與設備改善", description: "新增或修改設備、設施及製程時的能源績效考量", clauses: "8.2" },
+    { id: "purchase", name: "採購管理", description: "能源、設備、產品及服務採購", clauses: "8.3" },
+    { id: "training", name: "教育訓練與人員能力", description: "能力、訓練及能源管理認知", clauses: "7.2、7.3" },
+    { id: "document", name: "文件與紀錄管理", description: "程序文件、表單、紀錄及版本管理", clauses: "7.5" },
+    { id: "law", name: "法規及其他要求", description: "法規鑑別、適用性及符合性評估", clauses: "4.2、9.1" },
+    { id: "audit", name: "內部稽核", description: "稽核規劃、執行、結果及改善追蹤", clauses: "9.2" },
+    { id: "review", name: "管理審查", description: "管理審查輸入、輸出及決議追蹤", clauses: "9.3" },
+    { id: "corrective", name: "不符合與矯正措施", description: "不符合、原因分析、矯正措施及有效性確認", clauses: "10.1" }
+  ],
+
+  // ---------- 模擬文件 ----------
+  documents: {
+    energyReview: { title: "能源審查表", content: `
+      <strong>重大能源使用項目：</strong>主要能源系統<br>
+      年能源使用量：約占全廠能源使用 28%<br>
+      SEU 判定：是<br>
+      相關變數：未填寫<br>
+      能源績效：以年度總能源使用量追蹤<br>
+      改善機會：設備運轉最佳化` },
+
+    enpi: { title: "能源績效指標與能源基線管理表", content: `
+      EnPI：全廠能源使用量 ÷ 產品產量<br>
+      EnB 基準年度：2024 年<br>
+      2025 年新增一項主要生產設備／產線。<br>
+      現行能源基線仍沿用 2024 年資料。<br>
+      未見重大變更後是否需要調整 EnB 之評估紀錄。` },
+
+    target: { title: "能源目標及行動計畫", content: `
+      年度能源目標：節能率達 3%。<br>
+      改善方案：主要能源設備運轉最佳化。<br>
+      預估節能量：180,000 kWh／年。<br>
+      負責單位：設備單位。<br>
+      預計完成日期：未填寫。<br>
+      成效確認方式：未填寫。` },
+
+    monitor: { title: "能源監督量測月報", content: `
+      7 月份主要能源系統能源使用量較基準增加 18%。<br>
+      月報備註：可能與產量增加有關。<br>
+      未附產量與能源使用之分析資料。<br>
+      未見異常調查或後續處理紀錄。` },
+
+    seu: { title: "重大能源使用設備操作標準", content: `
+      已訂定主要能源設備之操作控制範圍。<br>
+      操作人員每日記錄操作參數。<br>
+      最近紀錄多次高於內部設定標準。<br>
+      未見偏離標準後之異常處理說明。` },
+
+    maintenance: { title: "設備維護保養紀錄", content: `
+      重大能源使用設備保養週期：每 3 個月。<br>
+      最近一次保養：2026/01/15。<br>
+      下一次應保養：2026/04/15。<br>
+      系統中未見 4 月後之定期保養紀錄。` },
+
+    measurement: { title: "能源量測設備一覽表", content: `
+      能源量測設備編號：EM-003<br>
+      查驗週期：1 年<br>
+      最近查驗日期：2025/05/10<br>
+      下次查驗日期：2026/05/10<br>
+      目前未見最新查驗或確認紀錄。` },
+
+    design: { title: "新增主要能源設備設計評估資料", content: `
+      2025 年新增主要生產設備 1 台。<br>
+      設計評估內容包含：產能、品質、設備尺寸及投資成本。<br>
+      未見能源效率或使用期間能源績效相關評估紀錄。` },
+
+    purchase: { title: "設備採購評估表", content: `
+      主要能源設備採購評估項目：<br>
+      1. 設備價格<br>
+      2. 交期<br>
+      3. 保固<br>
+      4. 供應商服務能力<br>
+      未見能源績效相關採購評估準則。` },
+
+    training: { title: "教育訓練與能力紀錄", content: `
+      新進重大能源使用設備操作人員：王員<br>
+      到職日期：2026/03/01<br>
+      已完成一般職業安全教育訓練。<br>
+      未見該設備操作或能源管理相關訓練／能力確認紀錄。` },
+
+    document: { title: "文件版本紀錄", content: `
+      現行重大能源使用設備操作標準：第 5 版。<br>
+      現場操作區張貼版本：第 4 版。<br>
+      第 4 版與第 5 版之操作控制範圍不同。` },
+
+    law: { title: "能源法規及其他要求鑑別表", content: `
+      最近法規鑑別日期：2025/01/10。<br>
+      表單已列出適用能源相關法規及其他要求。<br>
+      2026 年度尚未見符合性評估紀錄。` },
+
+    audit: { title: "年度內部稽核計畫", content: `
+      稽核範圍：能源管理系統相關部門。<br>
+      稽核頻率：每年一次。<br>
+      去年度設備單位發現 3 項不符合事項。<br>
+      本年度所有部門仍採相同稽核時間配置。` },
+
+    review: { title: "管理審查會議紀錄", content: `
+      已討論：能源政策、內部稽核結果、年度能源使用量。<br>
+      未見能源目標達成程度及能源績效改善結果之討論紀錄。<br>
+      會議結論：持續推動能源管理系統。` },
+
+    corrective: { title: "不符合與矯正措施追蹤表", content: `
+      問題：重大能源使用設備長期偏離內部操作標準。<br>
+      矯正：通知操作人員恢復至標準範圍。<br>
+      原因分析：未填寫。<br>
+      防止再發措施：未填寫。<br>
+      有效性確認：未執行。` }
+  },
+
+  // ---------- 模擬訪談 ----------
+  interviews: {
+    energyReview: [
+      ["稽核員", "請問這項能源使用為什麼被判定為重大能源使用（SEU）？"],
+      ["受稽核人員", "因為它占全廠能源使用比例很高，所以我們判定為 SEU。"],
+      ["稽核員", "那影響這項 SEU 能源績效的相關變數有哪些？"],
+      ["受稽核人員", "這部分目前沒有特別分析。"]
+    ],
+    enpi: [
+      ["稽核員", "新增主要生產設備後，有重新確認能源基線是否仍適用嗎？"],
+      ["受稽核人員", "沒有，我們目前還是直接跟 2024 年的數據比較。"]
+    ],
+    target: [
+      ["稽核員", "這項節能改善預計何時完成？完成後如何確認節能效果？"],
+      ["受稽核人員", "目前還沒有確定日期，完成後應該會看能源費用有沒有下降。"]
+    ],
+    monitor: [
+      ["稽核員", "7 月份能源使用增加 18%，有進一步分析嗎？"],
+      ["受稽核人員", "我們認為應該是產量增加，所以沒有另外調查。"]
+    ],
+    seu: [
+      ["稽核員", "目前重大能源使用設備實際操作條件是否符合內部設定標準？"],
+      ["操作人員", "有時候會超過一點，這樣生產比較穩定。"]
+    ],
+    maintenance: [
+      ["稽核員", "可以提供今年重大能源使用設備的保養紀錄嗎？"],
+      ["設備人員", "最近比較忙，4 月之後應該沒有依原週期執行。"]
+    ],
+    measurement: [
+      ["稽核員", "這台能源量測設備今年有完成查驗或確認嗎？"],
+      ["設備人員", "目前還沒有，但數字看起來都很正常。"]
+    ],
+    design: [
+      ["稽核員", "新增設備時，有比較不同方案的能源效率或能源績效嗎？"],
+      ["工程人員", "當時主要看價格、產能及品質，能源效率沒有特別比較。"]
+    ],
+    purchase: [
+      ["稽核員", "採購主要能源設備時如何評估能源績效？"],
+      ["採購人員", "目前主要依價格、交期、保固及供應商服務能力選擇。"]
+    ],
+    training: [
+      ["稽核員", "新進操作人員如何確認具備重大能源使用設備的操作能力？"],
+      ["主管", "有資深同仁帶他操作，但目前沒有另外留下能力確認紀錄。"]
+    ],
+    document: [
+      ["稽核員", "為什麼現場張貼的操作標準與系統現行版本不同？"],
+      ["操作人員", "我們不知道文件已經更新。"]
+    ],
+    law: [
+      ["稽核員", "今年是否已進行能源相關法規及其他要求的符合性評估？"],
+      ["管理人員", "去年有做，今年還沒有安排。"]
+    ],
+    audit: [
+      ["稽核員", "今年的內部稽核方案有依過去稽核結果調整嗎？"],
+      ["管理人員", "沒有，我們每年都是用相同方式安排。"]
+    ],
+    review: [
+      ["稽核員", "管理審查有確認今年能源目標及能源績效改善狀況嗎？"],
+      ["管理人員", "會議主要看總能源使用量，沒有特別逐項檢討目標。"]
+    ],
+    corrective: [
+      ["稽核員", "這項操作條件偏離問題為什麼持續發生？"],
+      ["設備人員", "每次發現就請操作員調整，但過一陣子又會發生。"]
+    ]
+  },
+
+  // ---------- 題目 ----------
+  // category 對應負責項目 id；answer 從 0 開始算
+  questions: [
+    { id: 1, category: "energyReview", clause: "6.3",
+      question: "依目前能源審查資料，稽核員最應進一步確認哪一項？",
+      options: ["設備購買價格", "影響重大能源使用能源績效的相關變數", "設備外觀顏色", "供應商品牌"],
+      answer: 1,
+      explanation: "重大能源使用（SEU）除能源使用與消耗外，能源審查亦應進一步確認其相關變數及目前能源績效等資訊。",
+      practical: "實務稽核可進一步確認產量、運轉時數、溫度、壓力或其他實際影響能源使用的因素。" },
+
+    { id: 2, category: "energyReview", clause: "6.3",
+      question: "受稽核人員表示「SEU 只要確認能源使用量即可」，此觀念是否完整？",
+      options: ["完整，只需掌握能源使用量", "不完整，還需確認相關變數及目前能源績效等資訊", "完整，只要每年更新即可", "完整，只需另外確認設備數量"],
+      answer: 1,
+      explanation: "重大能源使用管理並非只確認能源消耗量，能源審查還應掌握相關變數、目前能源績效及相關人員等資訊。",
+      practical: "稽核時不要只問「用了多少能源」，還可追問「哪些因素會影響能源使用」。" },
+
+    { id: 3, category: "enpi", clause: "6.5",
+      question: "新增可能顯著影響能源績效的主要生產設備後，對原能源基線最適當的作法為何？",
+      options: ["一定立即更換基準年度", "完全不需處理", "評估重大變更是否造成原能源基線不再適用", "直接刪除新增設備的能源使用量"],
+      answer: 2,
+      explanation: "當靜態因子發生重大改變等情況時，應評估能源基線是否需要調整，而非能源使用增加就直接修改。",
+      practical: "可查閱產線、設備、產能或製程變更紀錄，以及組織既定的 EnB 調整方法。" },
+
+    { id: 4, category: "enpi", clause: "6.4",
+      question: "若產量會顯著影響能源使用，評估能源績效時較適當的作法為何？",
+      options: ["只比較年度總能源使用量", "完全忽略產量", "適當考量產量等相關變數", "只比較能源單價"],
+      answer: 2,
+      explanation: "當相關變數顯著影響能源績效時，能源績效指標應適當考量相關變數。",
+      practical: "製造業常需確認產量、工時、溫度等變數是否顯著影響能源使用。" },
+
+    { id: 5, category: "target", clause: "6.2",
+      question: "目前能源行動計畫最明顯缺少哪類資訊？",
+      options: ["公司名稱", "完成期限與成效評估方式", "設備品牌", "員工人數"],
+      answer: 1,
+      explanation: "達成能源目標及能源標的的規劃應包含執行事項、資源、責任、完成期限及結果評估方式等。",
+      practical: "可沿著「做什麼、誰負責、何時完成、需要什麼資源、如何確認成果」進行查核。" },
+
+    { id: 6, category: "monitor", clause: "9.1",
+      question: "主要能源系統能源使用增加 18%，僅以「可能是產量增加」說明，最適當的下一步為何？",
+      options: ["直接結案", "刪除異常月份", "取得產量等相關資料，進一步分析重大偏差原因", "修改能源政策"],
+      answer: 2,
+      explanation: "發現能源績效重大偏差時應進行調查及適當回應，不能只以未驗證的推測作為結論。",
+      practical: "實務上可將能源數據與產量、工時、溫度等相關變數一起分析。" },
+
+    { id: 7, category: "seu", clause: "8.1",
+      question: "紀錄顯示重大能源使用設備多次偏離既定操作標準，稽核員下一步最適合做什麼？",
+      options: ["直接修改操作標準", "確認實際紀錄、偏離原因及異常處理情形", "直接忽略", "立即要求採購新設備"],
+      answer: 1,
+      explanation: "應確認組織是否依建立的運作準則進行控制，以及發生偏離時是否進行適當處理。",
+      practical: "稽核應先取得文件、紀錄、訪談及現場等客觀證據，再判斷是否形成不符合。" },
+
+    { id: 8, category: "maintenance", clause: "8.1",
+      question: "重大能源使用設備未依既定週期保養時，首先應確認什麼？",
+      options: ["保養規定、實際執行情形及其對能源績效的影響", "設備購買價格", "員工薪資", "供應商公司規模"],
+      answer: 0,
+      explanation: "與重大能源使用及能源績效相關的設備維護，應依組織建立的運作準則適當控制。",
+      practical: "可確認保養標準、保養紀錄、未執行原因，以及設備效率或操作條件是否受到影響。" },
+
+    { id: 9, category: "measurement", clause: "6.6 / 9.1",
+      question: "能源量測設備已超過組織規定的查驗期限，但人員表示「數字看起來正常」，較適當的處理為何？",
+      options: ["數字正常即可，不需處理", "確認量測設備準確性及既定管理要求是否落實", "直接更換所有量測設備", "停止能源管理系統"],
+      answer: 1,
+      explanation: "能源績效相關量測資料應具有適當的準確性及重複性，不能只以主觀判斷數字看起來是否正常。",
+      practical: "可查閱校正、查驗、比對或組織所建立的其他量測設備管理證據。" },
+
+    { id: 10, category: "design", clause: "8.2",
+      question: "新增預期會顯著影響能源績效的設備時，設計階段應增加哪項考量？",
+      options: ["能源績效改善機會", "員工制服", "公司 Logo", "辦公室座位"],
+      answer: 0,
+      explanation: "對預期在使用期間可能顯著影響能源績效的新設施、設備、系統及製程，設計時應考量能源績效改善機會。",
+      practical: "可比較設備效率、能源需求、控制方式及使用期間的能源績效。" },
+
+    { id: 11, category: "purchase", clause: "8.3",
+      question: "採購預期會顯著影響能源績效的設備時，目前評估表最需要補強哪一部分？",
+      options: ["能源績效相關評估準則", "供應商 Logo", "設備顏色", "業務人員姓名"],
+      answer: 0,
+      explanation: "採購預期對能源績效有重大影響的能源使用產品、設備及服務時，應適當評估其能源績效。",
+      practical: "採購不宜只比較初期價格，也可建立效率、能源使用或生命週期能源表現等評估條件。" },
+
+    { id: 12, category: "training", clause: "7.2",
+      question: "新進 SEU 操作人員僅由資深同仁口頭帶領，稽核時最重要的是確認什麼？",
+      options: ["是否具有必要能力及相關證據", "年齡", "薪資", "到職時穿著"],
+      answer: 0,
+      explanation: "從事影響能源績效及能源管理系統工作的人員應具備必要能力，並保留適當文件化資訊作為能力證據。",
+      practical: "訓練紀錄只是能力證據之一，也可透過經驗、技能評估或實際操作確認。" },
+
+    { id: 13, category: "document", clause: "7.5",
+      question: "現場仍使用舊版重大能源使用設備操作標準，主要應確認哪項管理機制？",
+      options: ["文件版本及使用點控制", "產品價格", "能源單價", "員工人數"],
+      answer: 0,
+      explanation: "文件化資訊應受到適當控制，確保需要使用的位置可以取得適用版本。",
+      practical: "可查閱文件發行、回收、版本識別、現場更新及舊版文件防止誤用方式。" },
+
+    { id: 14, category: "law", clause: "4.2 / 9.1",
+      question: "法規已完成鑑別，但今年尚未進行符合性評估，應進一步確認什麼？",
+      options: ["組織規劃的符合性評估方式、頻率及實際執行情形", "公司 Logo", "產品產量", "設備顏色"],
+      answer: 0,
+      explanation: "組織除需確認適用的法令及其他要求外，也應依規劃安排評估其符合情形。",
+      practical: "「知道有哪些適用要求」與「確認目前是否符合」是兩個不同的管理活動。" },
+
+    { id: 15, category: "audit", clause: "9.2",
+      question: "去年設備單位有多項不符合，但今年仍與其他部門配置完全相同的稽核安排，規劃稽核方案時最應考量什麼？",
+      options: ["先前稽核結果及相關過程的重要性", "所有部門稽核時間必須相同", "部門人數必須完全相同", "只考量稽核員方便性"],
+      answer: 0,
+      explanation: "規劃內部稽核方案時，應考量相關過程的重要性、能源績效影響及先前稽核結果等。",
+      practical: "過去問題較多或對能源績效影響較大的領域，可安排不同的稽核深度或頻率。" },
+
+    { id: 16, category: "review", clause: "9.3",
+      question: "管理審查僅查看年度總能源使用量，較明顯還應確認哪項資訊？",
+      options: ["能源目標達成程度及能源績效改善情形", "公司制服", "客戶 Logo", "停車位數量"],
+      answer: 0,
+      explanation: "管理審查應涵蓋能源績效及能源目標與標的達成程度等相關資訊。",
+      practical: "管理審查不是單純能源使用量報告，而是最高管理階層對能源管理系統成效的系統性檢討。" },
+
+    { id: 17, category: "corrective", clause: "10.1",
+      question: "設備操作偏離標準時，每次都只要求操作人員恢復設定，但問題持續再發，最需要補強什麼？",
+      options: ["原因分析、矯正措施及有效性確認", "增加文件頁數", "更換公司名稱", "增加稽核員"],
+      answer: 0,
+      explanation: "反覆發生的不符合不能只處理表面現象，還應確認原因、採取適當矯正措施並審查措施有效性。",
+      practical: "「把操作條件調回來」主要處理當下問題；還需要找出為何持續偏離，才能降低再次發生的可能性。" }
+  ]
+};
+// ============================================
+// 內部稽核模擬測驗（進階版）
+// 資料大多已填寫完整，重點在比對一致性、合理性與實際執行
+// ============================================
+const AUDIT_ADV = {
+
+  id: "audit-adv",
+  title: "內部稽核模擬測驗",
+  level: "進階版",
+  description: "從完整資料中找出異常：文件 × 紀錄 × 訪談 × 稽核證據的交叉比對。",
+  audience: "有稽核經驗、想加強證據判斷的內部稽核員",
+
+  company: {
+    employees: "356 人",
+    extraRows: [
+      ["能源管理系統範圍", "全廠生產、設備、公用系統及行政區域"],
+      ["能源基線年度", "2024 年"],
+      ["年度能源目標", "2026 年度整體能源績效改善 3%"]
+    ],
+    situation: "本公司已執行 ISO 50001 能源管理系統多年，文件及表單大致完整。本次內部稽核的重點不是確認「有沒有文件」，而是確認文件內容是否正確、資料是否一致，以及實際執行是否符合既定要求。"
+  },
+
+  notes: {
+    start: "進階模式：本案例中的資料大部分均已完整填寫。請勿只尋找空白欄位，而應比對資料的一致性、合理性及實際執行情形。",
+    docs: "文件中的空白不一定是不符合；資料有填也不代表正確。請留意日期、單位、數值、前後文件的一致性及管理邏輯。",
+    quiz: "請以內部稽核員角度判斷。部分題目並非詢問條文，而是測試您能否從文件、數據及訪談中找到真正需要追查的地方。"
+  },
+
+  // ---------- 行業別 ----------
+  industries: [
+    { id: "chemical", name: "化工業", icon: "⚗️",
+      company: "宏遠化學材料股份有限公司",
+      process: "原料儲存 → 混合 → 反應 → 分離 → 純化 → 包裝",
+      energy: "電力、天然氣、蒸汽",
+      equipment: "反應槽、冰水機、鍋爐、空壓機、泵浦",
+      seu: "反應製程、冰水系統、蒸汽系統" },
+
+    { id: "basicMetal", name: "金屬基本工業", icon: "🔥",
+      company: "宏遠金屬工業股份有限公司",
+      process: "原料 → 熔煉 → 鑄造 → 熱處理 → 加工",
+      energy: "電力、天然氣",
+      equipment: "熔解爐、熱處理爐、冷卻設備、空壓機",
+      seu: "熔煉製程、熱處理製程、空壓系統" },
+
+    { id: "nonMetal", name: "非金屬礦業", icon: "⛰️",
+      company: "宏遠材料工業股份有限公司",
+      process: "原料 → 破碎 → 研磨 → 成型 → 燒成 → 成品",
+      energy: "電力、天然氣",
+      equipment: "破碎機、研磨機、窯爐、風機",
+      seu: "窯爐、研磨系統、風機系統" },
+
+    { id: "food", name: "食品業", icon: "🍱",
+      company: "宏遠食品股份有限公司",
+      process: "原料驗收 → 前處理 → 加熱／冷卻 → 加工 → 包裝 → 冷藏",
+      energy: "電力、天然氣、蒸汽",
+      equipment: "冷凍機、冷藏庫、鍋爐、空壓機、生產設備",
+      seu: "冷凍冷藏系統、蒸汽系統、生產製程" },
+
+    { id: "textile", name: "紡織業", icon: "🧵",
+      company: "宏遠紡織股份有限公司",
+      process: "織造 → 染整 → 水洗 → 烘乾 → 定型",
+      energy: "電力、天然氣、蒸汽",
+      equipment: "染整機、定型機、鍋爐、空壓機",
+      seu: "染整製程、定型機、蒸汽系統" },
+
+    { id: "paper", name: "造紙業", icon: "📄",
+      company: "宏遠紙業股份有限公司",
+      process: "製漿 → 調漿 → 抄紙 → 壓榨 → 乾燥 → 成品",
+      energy: "電力、天然氣、蒸汽",
+      equipment: "紙機、鍋爐、泵浦、風機、空壓機",
+      seu: "紙機、蒸汽系統、泵浦系統" },
+
+    { id: "electronics", name: "電機電子業", icon: "💻",
+      company: "宏遠電子科技股份有限公司",
+      process: "製程加工 → 清洗 → 組裝 → 測試 → 包裝",
+      energy: "電力",
+      equipment: "冰水機、空壓機、空調、真空設備、製程設備",
+      seu: "冰水系統、空壓系統、主要製程設備" },
+
+    { id: "other", name: "其他製造業", icon: "🏭",
+      company: "宏遠精密製造股份有限公司",
+      process: "原料 → 加工 → 組裝 → 檢驗 → 包裝",
+      energy: "電力、天然氣",
+      equipment: "生產機台、空壓機、冰水機、空調系統",
+      seu: "主要生產設備、空壓系統、冰水系統" }
+  ],
+
+  // ---------- 負責項目 ----------
+  responsibilities: [
+    { id: "energyReview", name: "能源審查", description: "能源使用、SEU、相關變數、改善機會", clauses: "6.3" },
+    { id: "enpi", name: "EnPI／EnB 管理", description: "能源績效指標、基線、正規化及調整", clauses: "6.4、6.5" },
+    { id: "target", name: "能源目標與行動計畫", description: "目標、標的、方案及成效追蹤", clauses: "6.2" },
+    { id: "monitor", name: "能源數據與監督量測", description: "資料蒐集、分析、重大偏差", clauses: "6.6、9.1" },
+    { id: "seu", name: "SEU 操作管理", description: "重大能源使用設備操作與控制", clauses: "8.1" },
+    { id: "maintenance", name: "設備維護保養", description: "設備維護、保養與能源績效", clauses: "8.1" },
+    { id: "measurement", name: "量測設備管理", description: "能源量測設備準確性及管理", clauses: "6.6、9.1" },
+    { id: "design", name: "設計與設備改善", description: "設計階段能源績效考量", clauses: "8.2" },
+    { id: "purchase", name: "採購管理", description: "能源設備及服務採購", clauses: "8.3" },
+    { id: "training", name: "教育訓練與人員能力", description: "能力、訓練、認知", clauses: "7.2、7.3" },
+    { id: "document", name: "文件與紀錄管理", description: "文件版本及紀錄控制", clauses: "7.5" },
+    { id: "law", name: "法規及其他要求", description: "鑑別、更新及符合性", clauses: "4.2、9.1" },
+    { id: "audit", name: "內部稽核", description: "稽核規劃、執行及追蹤", clauses: "9.2" },
+    { id: "review", name: "管理審查", description: "管理審查輸入及輸出", clauses: "9.3" },
+    { id: "corrective", name: "不符合與矯正措施", description: "原因、矯正、有效性確認", clauses: "10.1" }
+  ],
+
+  // ---------- 文件 ----------
+  documents: {
+
+    energyReview: { title: "2026 年度能源審查表", content: `
+      <div class="doc-meta">文件編號：EN-R-01　｜　版次：V4　｜　更新日期：2026/02/20</div>
+      <table class="doc-table">
+        <tr><th>能源使用</th><th>年能源量</th><th>占比</th><th>SEU</th><th>相關變數</th><th>EnPI</th></tr>
+        <tr><td>主要生產製程</td><td>5,420,000 kWh</td><td>41.2%</td><td>是</td><td>產品產量</td><td>kWh/ton</td></tr>
+        <tr><td>冰水系統</td><td>2,880,000 kWh</td><td>21.9%</td><td>是</td><td>外氣溫度、運轉時數</td><td>kWh/RT</td></tr>
+        <tr><td>空壓系統</td><td>1,760,000 kWh</td><td>13.4%</td><td>是</td><td>生產量、系統壓力</td><td>kWh/Nm³</td></tr>
+        <tr><td>空調系統</td><td>1,220,000 kWh</td><td>9.3%</td><td>否</td><td>外氣溫度</td><td>kWh/m²</td></tr>
+        <tr><td>照明及其他</td><td>1,860,000 kWh</td><td>14.2%</td><td>否</td><td>使用時數</td><td>kWh/月</td></tr>
+      </table>
+      <p><strong>SEU 判定原則：</strong>年度能源使用占比達 10% 以上，或具重大能源績效改善機會者。</p>
+      <p><strong>改善機會：</strong>冰水主機最佳化、空壓壓力調整、生產排程最佳化。</p>
+      <p><strong>備註：</strong>2026 年 1 月新增第二生產線，預估產能增加約 18%。</p>` },
+
+    enpi: { title: "能源績效指標與能源基線管理表", content: `
+      <div class="doc-meta">基線年度：2024 年　｜　最近檢討日期：2026/03/05</div>
+      <table class="doc-table">
+        <tr><th>項目</th><th>2024 EnB</th><th>2025 實績</th><th>2026 管理方式</th></tr>
+        <tr><td>全廠</td><td>620 kWh/ton</td><td>598 kWh/ton</td><td>沿用 2024 EnB</td></tr>
+        <tr><td>主要生產製程</td><td>310 kWh/ton</td><td>298 kWh/ton</td><td>沿用 2024 EnB</td></tr>
+        <tr><td>冰水系統</td><td>0.78 kWh/RT</td><td>0.74 kWh/RT</td><td>沿用 2024 EnB</td></tr>
+      </table>
+      <p><strong>相關變數：</strong>產量、外氣溫度、運轉時數。</p>
+      <p><strong>靜態因子：</strong>廠房面積、主要生產設備數量、產品種類。</p>
+      <p><strong>2026 年變更：</strong>1 月新增第二生產線，主要生產設備數量由 12 台增加至 16 台。經能源管理小組討論，考量 EnPI 仍採單位產量表示，因此暫不調整 EnB。</p>` },
+
+    target: { title: "2026 年度能源目標及行動計畫", content: `
+      <table class="doc-table">
+        <tr><th>方案</th><th>預估節能</th><th>負責人</th><th>預算</th><th>完成期限</th><th>驗證方式</th></tr>
+        <tr><td>空壓系統壓力最佳化</td><td>120,000 kWh/年</td><td>陳課長</td><td>80,000 元</td><td>2026/06/30</td><td>改善前後月用電比較</td></tr>
+        <tr><td>冰水主機群控改善</td><td>260,000 kWh/年</td><td>林工程師</td><td>650,000 元</td><td>2026/09/30</td><td>比較改善前後 kW/RT</td></tr>
+        <tr><td>製程待機時間降低</td><td>90,000 kWh/年</td><td>王主任</td><td>0 元</td><td>2026/08/31</td><td>比較設備運轉時數</td></tr>
+      </table>
+      <p>年度目標：能源績效改善 3%。<br>年度預估節能量合計：470,000 kWh。</p>` },
+
+    monitor: { title: "2026 年能源績效監督月報", content: `
+      <table class="doc-table">
+        <tr><th>月份</th><th>產量 ton</th><th>用電量 kWh</th><th>EnPI kWh/ton</th><th>與 EnB 差異</th><th>判定</th></tr>
+        <tr><td>1 月</td><td>1,850</td><td>1,110,000</td><td>600</td><td>-3.2%</td><td>正常</td></tr>
+        <tr><td>2 月</td><td>1,720</td><td>1,060,000</td><td>616</td><td>-0.6%</td><td>正常</td></tr>
+        <tr><td>3 月</td><td>1,960</td><td>1,145,000</td><td>584</td><td>-5.8%</td><td>良好</td></tr>
+        <tr><td>4 月</td><td>2,050</td><td>1,320,000</td><td>644</td><td>+3.9%</td><td>正常</td></tr>
+      </table>
+      <p>重大偏差判定標準：EnPI 較 EnB 惡化超過 ±3% 時進行原因分析。</p>
+      <p>4 月份說明：因第二產線進入量產階段，能源使用增加，屬正常生產變動。</p>` },
+
+    seu: { title: "SEU 運作控制與每日點檢紀錄", content: `
+      <table class="doc-table">
+        <tr><th>設備</th><th>控制項目</th><th>操作標準</th><th>4/21</th><th>4/22</th><th>4/23</th></tr>
+        <tr><td>空壓系統</td><td>主管壓力</td><td>6.0～6.5 bar</td><td>6.4</td><td>6.6</td><td>6.7</td></tr>
+        <tr><td>冰水系統</td><td>冰水出水溫度</td><td>7±1°C</td><td>7.1</td><td>7.0</td><td>7.2</td></tr>
+        <tr><td>主要製程</td><td>設備待機時間</td><td>每日 ≤60 min</td><td>48</td><td>55</td><td>52</td></tr>
+      </table>
+      <p>異常處理規定：超出控制範圍時，由操作人員通知值班主管並於備註欄記錄處理方式。</p>
+      <p>4/22 備註：無。<br>4/23 備註：生產需求。</p>` },
+
+    maintenance: { title: "2026 年度 SEU 設備保養計畫及紀錄", content: `
+      <table class="doc-table">
+        <tr><th>設備</th><th>週期</th><th>計畫日期</th><th>實際日期</th><th>結果</th></tr>
+        <tr><td>空壓機 A</td><td>3 個月</td><td>01/15</td><td>01/14</td><td>正常</td></tr>
+        <tr><td>空壓機 A</td><td>3 個月</td><td>04/15</td><td>04/28</td><td>正常</td></tr>
+        <tr><td>冰水主機 1</td><td>6 個月</td><td>03/20</td><td>03/20</td><td>正常</td></tr>
+        <tr><td>生產設備 P03</td><td>6 個月</td><td>04/10</td><td>04/10</td><td>皮帶張力調整</td></tr>
+      </table>
+      <p>程序規定：保養可依生產需求前後調整 7 日；超過 7 日者應經設備主管核准並評估影響。</p>
+      <p>空壓機 A 4 月份保養備註：因訂單生產延後保養。</p>` },
+
+    measurement: { title: "能源量測設備校驗／查驗一覽表", content: `
+      <table class="doc-table">
+        <tr><th>編號</th><th>設備</th><th>週期</th><th>最近確認</th><th>下次日期</th><th>狀態</th></tr>
+        <tr><td>EM-001</td><td>總電表</td><td>2 年</td><td>2025/08/15</td><td>2027/08/15</td><td>有效</td></tr>
+        <tr><td>FM-003</td><td>空壓流量計</td><td>1 年</td><td>2025/05/10</td><td>2026/05/10</td><td>有效</td></tr>
+        <tr><td>TM-006</td><td>冰水溫度計</td><td>1 年</td><td>2026/02/18</td><td>2027/02/18</td><td>有效</td></tr>
+      </table>
+      <p>FM-003 於 2026/05/18 完成查驗，查驗結果顯示實際流量較儀表顯示值低 6.8%。設備單位於 5/19 完成儀表調整。</p>
+      <p>2026 年 1 月至 5 月空壓系統 EnPI 均使用 FM-003 原始量測值計算。</p>` },
+
+    design: { title: "第二生產線設計審查紀錄", content: `
+      <table class="doc-table">
+        <tr><th>評估項目</th><th>A 方案</th><th>B 方案</th></tr>
+        <tr><td>設備價格</td><td>1,800 萬元</td><td>1,950 萬元</td></tr>
+        <tr><td>產能</td><td>500 ton/月</td><td>520 ton/月</td></tr>
+        <tr><td>額定功率</td><td>420 kW</td><td>390 kW</td></tr>
+        <tr><td>單位產品能源需求</td><td>0.84 kWh/kg</td><td>0.75 kWh/kg</td></tr>
+        <tr><td>維護成本</td><td>較低</td><td>中等</td></tr>
+      </table>
+      <p>最終選擇：A 方案。<br>選擇理由：初期投資成本較低，且既有操作人員熟悉該設備品牌。</p>
+      <p>能源管理小組會簽：已完成。</p>` },
+
+    purchase: { title: "重大能源設備採購評選表", content: `
+      <table class="doc-table">
+        <tr><th>評選項目</th><th>權重</th><th>A 廠商</th><th>B 廠商</th></tr>
+        <tr><td>價格</td><td>35%</td><td>90</td><td>80</td></tr>
+        <tr><td>交期</td><td>20%</td><td>85</td><td>90</td></tr>
+        <tr><td>售後服務</td><td>20%</td><td>90</td><td>85</td></tr>
+        <tr><td>能源效率</td><td>25%</td><td>72</td><td>92</td></tr>
+      </table>
+      <p>評選結果：A 廠商總分 85.65 分；B 廠商總分 86.75 分。</p>
+      <p>採購核定：選擇 A 廠商。<br>理由：A 廠商為既有合作供應商。</p>` },
+
+    training: { title: "SEU 相關人員能力矩陣", content: `
+      <table class="doc-table">
+        <tr><th>人員</th><th>職務</th><th>必要能力</th><th>訓練</th><th>實作確認</th><th>結果</th></tr>
+        <tr><td>陳員</td><td>空壓操作</td><td>空壓系統操作</td><td>2025/11/05</td><td>2025/11/08</td><td>合格</td></tr>
+        <tr><td>王員</td><td>空壓操作</td><td>空壓系統操作</td><td>2026/03/03</td><td>2026/03/05</td><td>合格</td></tr>
+        <tr><td>林員</td><td>冰水操作</td><td>冰水主機操作</td><td>2026/02/15</td><td>2026/02/16</td><td>合格</td></tr>
+      </table>
+      <p>王員實作評核表：壓力設定、啟停程序、異常通報均評定合格。</p>` },
+
+    document: { title: "文件發行及版本管制紀錄", content: `
+      <table class="doc-table">
+        <tr><th>文件</th><th>現行版</th><th>生效日</th><th>現場確認</th></tr>
+        <tr><td>空壓系統操作標準</td><td>V5</td><td>2026/03/01</td><td>V5</td></tr>
+        <tr><td>冰水系統操作標準</td><td>V4</td><td>2025/12/10</td><td>V4</td></tr>
+        <tr><td>能源監督量測程序</td><td>V3</td><td>2026/01/05</td><td>電子版</td></tr>
+      </table>
+      <p>空壓系統操作標準 V5 將主管壓力由「6.5±0.3 bar」修改為「6.0～6.5 bar」。</p>
+      <p>教育訓練紀錄顯示操作人員已於 2026/03/02 完成新版文件說明。</p>` },
+
+    law: { title: "能源法規及其他要求管制表", content: `
+      <table class="doc-table">
+        <tr><th>要求</th><th>適用性</th><th>符合性</th><th>最近評估</th></tr>
+        <tr><td>能源管理相關法令 A</td><td>適用</td><td>符合</td><td>2026/01/20</td></tr>
+        <tr><td>能源設備效率相關要求 B</td><td>適用</td><td>符合</td><td>2026/01/20</td></tr>
+        <tr><td>用能設備定期申報要求 C</td><td>適用</td><td>符合</td><td>2026/01/20</td></tr>
+      </table>
+      <p>程序規定：法規資料每半年確認更新一次，符合性評估每年至少一次。</p>
+      <p>2026/07/15 法規清單已由管理人員完成網站更新確認，確認結果：「無新增適用要求」。</p>` },
+
+    audit: { title: "2026 年度內部稽核方案", content: `
+      <table class="doc-table">
+        <tr><th>單位</th><th>去年結果</th><th>能源影響</th><th>今年稽核時間</th></tr>
+        <tr><td>能源管理單位</td><td>0 NC</td><td>高</td><td>2 小時</td></tr>
+        <tr><td>設備單位</td><td>3 NC</td><td>高</td><td>1 小時</td></tr>
+        <tr><td>生產單位</td><td>1 NC</td><td>高</td><td>1 小時</td></tr>
+        <tr><td>行政單位</td><td>0 NC</td><td>低</td><td>2 小時</td></tr>
+      </table>
+      <p>稽核方案制定原則：應考量過程重要性、能源績效影響、組織變更及先前稽核結果。</p>` },
+
+    review: { title: "2026 年度管理審查會議紀錄", content: `
+      <table class="doc-table">
+        <tr><th>審查項目</th><th>結果</th></tr>
+        <tr><td>前次管理審查追蹤</td><td>已完成</td></tr>
+        <tr><td>能源政策</td><td>維持現行政策</td></tr>
+        <tr><td>能源績效及 EnPI</td><td>年度 EnPI 改善 3.5%</td></tr>
+        <tr><td>能源目標</td><td>年度目標 3%，判定已達成</td></tr>
+        <tr><td>內部稽核</td><td>共 4 項不符合，均已完成矯正</td></tr>
+        <tr><td>持續改善機會</td><td>2026 年規劃冰水主機群控</td></tr>
+      </table>
+      <p>會議日期：2026/02/10。</p>
+      <p>備註：上述「年度 EnPI 改善 3.5%」係引用 2025 年度能源績效結果。2026 年度能源目標執行期間為 2026/01/01～2026/12/31。</p>` },
+
+    corrective: { title: "不符合及矯正措施紀錄", content: `
+      <div class="doc-meta">NC-2026-03｜空壓系統操作壓力多次高於內部標準</div>
+      <table class="doc-table">
+        <tr><th>項目</th><th>內容</th></tr>
+        <tr><td>立即矯正</td><td>將主管壓力由 6.8 bar 調整至 6.4 bar</td></tr>
+        <tr><td>原因分析</td><td>夜班人員擔心末端壓力不足，因此自行提高設定</td></tr>
+        <tr><td>矯正措施</td><td>重新教育夜班操作人員不得任意修改設定</td></tr>
+        <tr><td>完成日期</td><td>2026/04/10</td></tr>
+        <tr><td>有效性確認</td><td>2026/04/17 抽查，壓力 6.4 bar，判定有效</td></tr>
+      </table>
+      <p>4/22 操作紀錄：6.6 bar。<br>4/23 操作紀錄：6.7 bar。</p>` }
+  },
+
+  // ---------- 訪談 ----------
+  interviews: {
+    energyReview: [
+      ["稽核員", "能源審查表中冰水系統的相關變數是外氣溫度與運轉時數，這兩項都有進行分析嗎？"],
+      ["能源管理人員", "目前 EnPI 主要直接看 kWh/RT，外氣溫度有蒐集，但還沒有實際納入分析。"],
+      ["稽核員", "第二生產線新增後，有重新進行能源審查嗎？"],
+      ["能源管理人員", "有更新設備及能源使用資料，所以我們認為已完成更新。"]
+    ],
+    enpi: [
+      ["稽核員", "新增第二生產線後，為什麼 EnB 沒有調整？"],
+      ["能源管理人員", "因為我們使用 kWh/ton，已經除以產量，所以認為設備增加不會影響基線。"],
+      ["稽核員", "有分析新增 4 台主要設備是否造成能源使用特性改變嗎？"],
+      ["能源管理人員", "這部分沒有另外做統計分析。"]
+    ],
+    target: [
+      ["稽核員", "空壓改善方案如何確認節能 120,000 kWh？"],
+      ["設備主管", "我們會比較改善前後月用電量。"],
+      ["稽核員", "如果改善後產量增加呢？"],
+      ["設備主管", "目前表單沒有規定要調整產量。"]
+    ],
+    monitor: [
+      ["稽核員", "4 月份 EnPI 比基線差 3.9%，為什麼判定正常？"],
+      ["管理人員", "因為第二產線開始量產，所以能源增加是合理的。"],
+      ["稽核員", "有依程序進行重大偏差原因分析嗎？"],
+      ["管理人員", "月報裡有寫第二產線量產，我們就把它當作原因分析。"]
+    ],
+    seu: [
+      ["稽核員", "4 月 22 日及 23 日空壓壓力超出操作標準，如何處理？"],
+      ["操作員", "22 日沒有注意到，23 日因為產線反映末端壓力不足，所以先調高。"],
+      ["稽核員", "有依程序通知主管嗎？"],
+      ["操作員", "有口頭講，但沒有另外記錄。"]
+    ],
+    maintenance: [
+      ["稽核員", "空壓機 4 月 28 日才完成保養，有經主管核准延後嗎？"],
+      ["設備人員", "主管知道因為生產忙所以延後，但我們沒有另外填核准紀錄。"]
+    ],
+    measurement: [
+      ["稽核員", "FM-003 查驗發現 6.8% 的量測偏差後，有評估先前能源績效資料嗎？"],
+      ["設備人員", "我們把儀表調整好就可以了，之前月份的資料沒有修改。"]
+    ],
+    design: [
+      ["稽核員", "B 方案能源效率較佳，最後為什麼選 A 方案？"],
+      ["工程主管", "A 方案便宜 150 萬元，而且人員比較熟悉。"],
+      ["稽核員", "有評估設備使用期間增加的能源成本嗎？"],
+      ["工程主管", "沒有做到生命週期，只比較初期投資。"]
+    ],
+    purchase: [
+      ["稽核員", "評選總分是 B 廠商較高，為什麼最後採購 A 廠商？"],
+      ["採購主管", "因為 A 是長期合作廠商，風險比較低。"],
+      ["稽核員", "能源管理或採購程序允許改變評選結果嗎？"],
+      ["採購主管", "程序沒有特別寫。"]
+    ],
+    training: [
+      ["稽核員", "王員是否具備空壓系統操作能力？"],
+      ["主管", "有，已完成訓練及實作評核。"],
+      ["稽核員", "如果操作條件異常，他知道如何通報嗎？"],
+      ["王員", "超過標準時我會先確認現場需求，再通知值班主管。"]
+    ],
+    document: [
+      ["稽核員", "目前現場使用哪一版空壓操作標準？"],
+      ["操作員", "V5，3 月份有教育訓練，現場也是 V5。"]
+    ],
+    law: [
+      ["稽核員", "今年法規更新多久確認一次？"],
+      ["管理人員", "半年一次，1 月做符合性評估，7 月也有再確認網站更新。"]
+    ],
+    audit: [
+      ["稽核員", "設備單位去年有 3 項不符合，為什麼今年只安排 1 小時？"],
+      ["稽核主導人", "因為今年各單位人力比較忙，所以把時間平均調整。"]
+    ],
+    review: [
+      ["稽核員", "2 月份管理審查判定 2026 年度能源目標已達成，是依據什麼資料？"],
+      ["管理代表", "我們引用 2025 年的年度改善結果，因為當時 2026 年才剛開始。"]
+    ],
+    corrective: [
+      ["稽核員", "4 月 17 日有效性確認後，4 月 22、23 日又發生壓力超標，如何處理？"],
+      ["設備主管", "目前還沒有重新開矯正措施，因為幅度只有 0.1 到 0.2 bar。"]
+    ]
+  },
+
+  // ---------- 題目 ----------
+  questions: [
+    { id: 1, category: "energyReview", clause: "6.3",
+      context: "能源審查已列出能源使用量、SEU、相關變數、EnPI 及改善機會，看起來資料相當完整。",
+      question: "針對冰水系統，目前最值得稽核員進一步查證的是哪一項？",
+      options: ["是否真的有蒐集並適當分析已鑑別的相關變數", "是否將冰水機品牌寫入能源審查", "是否每台冰水機都被判定為 SEU", "是否將冰水系統移出能源審查"],
+      answer: 0,
+      explanation: "問題不是「相關變數欄位有沒有填」，而是組織已鑑別外氣溫度等相關變數，但訪談顯示目前並未真正納入能源績效分析。",
+      evidence: "應查閱外氣溫度、冰水負載、運轉時數及能源使用分析資料，確認相關變數是否確實影響能源績效，以及組織如何使用這些資訊。",
+      thinking: "進階稽核不能只確認表單欄位完整，還要確認填入的管理方法是否真的有執行。" },
+
+    { id: 2, category: "energyReview", clause: "6.3",
+      context: "2026 年新增第二生產線，產能增加約 18%，能源審查表也已更新設備及能源使用量。",
+      question: "僅依目前證據，最適當的稽核判斷為何？",
+      options: ["只要表單更新日期是最新，就一定符合", "新增生產線一定構成不符合", "應進一步確認重大變更後 SEU、相關變數、能源績效及改善機會是否重新評估", "必須立即更換所有 EnPI"],
+      answer: 2,
+      explanation: "能源審查的更新不是只有改數字。當設施、設備、系統或能源使用發生重大改變時，應確認能源審查的分析結果是否仍適當。",
+      evidence: "可查閱新增產線後的能源流向、SEU 重新判定、相關變數分析及改善機會評估。",
+      thinking: "「文件有更新」與「能源審查已充分更新」不是同一件事。" },
+
+    { id: 3, category: "enpi", clause: "6.4、6.5",
+      context: "第二生產線使主要設備由 12 台增加至 16 台，但組織認為 EnPI 採 kWh/ton，因此 EnB 不需調整。",
+      question: "稽核員應如何判斷這個說法？",
+      options: ["正確，只要除以產量就永遠不需調整 EnB", "錯誤，新增設備後一定要更換基準年度", "不能只依 kWh/ton 判斷，應確認靜態因子改變是否造成 EnPI／EnB 不再適用", "只需確認電價是否改變"],
+      answer: 2,
+      explanation: "使用強度型指標不代表已自動排除所有設備或製程變更的影響。主要設備數量本身已被組織列為靜態因子，因此重大改變後應有適當評估。",
+      evidence: "應取得新增設備前後能源模型、設備負載、產品組合及 EnPI 適用性評估。",
+      thinking: "這題的陷阱是「已經除以產量」。正規化不能取代對靜態因子重大變更的判斷。" },
+
+    { id: 4, category: "target", clause: "6.2",
+      context: "空壓改善行動計畫的欄位全部都有填寫，包含節能量、負責人、預算、期限及驗證方式。",
+      question: "其中哪一項內容仍最值得進一步查證？",
+      options: ["負責人姓名是否使用全名", "以改善前後月用電量直接驗證 120,000 kWh 節能量是否能排除產量等相關變數影響", "預算 80,000 元是否太低", "完成期限是否一定要設定 12 月 31 日"],
+      answer: 1,
+      explanation: "行動計畫形式上完整，但結果評估方法仍應能適當判斷能源績效改善。如果產量會影響空壓能源使用，只比較月用電量可能造成錯誤結論。",
+      evidence: "可確認改善前後產量、空壓流量、壓力、運轉時數及計算方法。",
+      thinking: "進階稽核要檢查「填的內容是否有效」，而不是只檢查「有沒有填」。" },
+
+    { id: 5, category: "monitor", clause: "9.1",
+      context: "程序規定 EnPI 較 EnB 惡化超過 3% 時應進行原因分析；4 月份惡化 3.9%，月報判定為正常。",
+      question: "下列哪一項是最主要的稽核疑點？",
+      options: ["3.9% 一定代表設備故障", "既定重大偏差門檻已觸發，但目前僅以第二產線量產作文字說明，需確認是否完成程序要求的調查與回應", "所有月份都必須判定異常", "EnPI 不能出現負值或正值"],
+      answer: 1,
+      explanation: "真正問題在於組織自己建立了重大偏差判定標準。4 月已超過門檻，因此應依既定方式調查與回應，而不是直接以推測原因結案。",
+      evidence: "應查閱重大偏差分析紀錄、產量、設備負載、第二產線能源特性及相關處置。",
+      thinking: "內部稽核除了查 ISO 要求，也要查組織是否遵守自己建立的管理規則。" },
+
+    { id: 6, category: "seu", clause: "8.1",
+      context: "空壓標準為 6.0～6.5 bar；4/22 為 6.6、4/23 為 6.7。4/23 備註「生產需求」。",
+      question: "目前最適當的判斷為何？",
+      options: ["只超過 0.1～0.2 bar，可以忽略", "只要有填備註就符合", "應確認偏離既定操作準則的原因、授權、通報及處理是否符合組織規定", "應立即把操作標準改成 6.7 bar"],
+      answer: 2,
+      explanation: "問題不只是數值超標，而是組織已建立操作準則及異常通報要求。紀錄與訪談顯示實際處理可能未依規定執行。",
+      evidence: "應查閱值班主管通報、異常處理紀錄及末端壓力不足的客觀證據。",
+      thinking: "不能因偏差幅度小就自行認定不重要；應先回到組織設定的控制準則。" },
+
+    { id: 7, category: "maintenance", clause: "8.1",
+      context: "空壓機計畫 4/15 保養，實際 4/28 完成。程序允許前後 7 日，超過 7 日應經主管核准並評估影響。",
+      question: "文件及訪談的主要問題在哪裡？",
+      options: ["保養延後 13 日，所以設備一定損壞", "保養最後有完成，因此完全沒有問題", "延後超過程序允許範圍，但目前沒有主管核准及影響評估的客觀紀錄", "所有設備都必須準時到同一天保養"],
+      answer: 2,
+      explanation: "組織允許一定範圍的彈性，但本案已超過 7 日。訪談只有「主管知道」，尚不足以證明程序要求的核准及影響評估已完成。",
+      evidence: "應查閱延期核准、設備狀況、能源效率及保養延期風險評估。",
+      thinking: "這是典型的「事情有做，但沒有依自己程序規定做完整」。" },
+
+    { id: 8, category: "measurement", clause: "6.6、9.1",
+      context: "FM-003 查驗發現顯示值與實際值差 6.8%，5/19 已完成調整，但 1～5 月 EnPI 仍使用原量測值。",
+      question: "最重要的下一步為何？",
+      options: ["儀表已調整，所以不需要再處理", "評估量測偏差對既有能源資料、EnPI 及相關能源績效結論的影響", "刪除 1～5 月全部資料", "立即更換所有流量計"],
+      answer: 1,
+      explanation: "發現量測設備存在顯著偏差後，不只要修正設備，也應評估先前使用該設備產生的資料是否受到影響。",
+      evidence: "應確認 6.8% 偏差方向、受影響期間、EnPI 重新計算結果及是否影響能源績效判斷。",
+      thinking: "量測設備管理的目的不是「校驗完成」本身，而是確保用於能源績效判斷的資料可信。" },
+
+    { id: 9, category: "design", clause: "8.2",
+      context: "A 方案單價較低，但單位產品能源需求 0.84 kWh/kg；B 方案為 0.75 kWh/kg。最後選 A 方案。",
+      question: "選擇能源效率較差的 A 方案是否一定構成不符合？",
+      options: ["一定，只能購買能源效率最高設備", "不一定；重點是設計階段是否適當考量能源績效改善機會，並將結果納入設計活動", "一定，只要 B 方案額定功率較低", "完全不需考量能源績效"],
+      answer: 1,
+      explanation: "ISO 50001 並非要求組織永遠選擇能源效率最高或最昂貴的方案。稽核重點在於能源績效改善機會是否真正被納入設計考量。",
+      evidence: "應確認能源成本、使用年限、運轉負載、產能及其他設計決策依據是否經過適當評估。",
+      thinking: "這是一題刻意避免「看到效率較差就直接開 NC」的題目，稽核需要充分證據。" },
+
+    { id: 10, category: "purchase", clause: "8.3",
+      context: "採購評選已將能源效率列為 25% 權重，B 廠商總分 86.75 高於 A 廠商 85.65，但最後選 A。",
+      question: "最適當的稽核處理方式為何？",
+      options: ["直接判定違反 ISO 50001，因為一定要買 B", "確認採購準則、評選規則及核定變更是否有適當依據，並確認能源績效評估結果確實納入採購決策", "供應商熟悉度一定比能源效率重要", "只要能源效率有列在表格中就一定符合"],
+      answer: 1,
+      explanation: "ISO 要求能源績效在相關採購活動中被適當評估與考量，但並不直接指定必須選最高效率供應商。此處應進一步查證組織自己的採購規則及決策依據。",
+      evidence: "查閱採購程序、核決權限、例外核准及能源績效評估紀錄。",
+      thinking: "進階稽核避免把「最佳實務」直接當成「條文強制要求」。" },
+
+    { id: 11, category: "training", clause: "7.2",
+      context: "王員已有訓練紀錄、實作評核，而且結果合格。",
+      question: "依目前文件與訪談，哪個判斷較合理？",
+      options: ["一定不符合，因為新進人員不能操作 SEU", "目前沒有明顯能力證據缺口，可再透過現場觀察確認其實際能力", "一定要每月重新訓練", "只要有教育訓練紀錄就不需要訪談"],
+      answer: 1,
+      explanation: "目前已具備訓練及實作評核等能力證據，不能為了找缺失而強行判定不符合。稽核員仍可透過現場操作或訪談抽查其能力。",
+      evidence: "可觀察實際啟停、壓力設定及異常通報流程。",
+      thinking: "進階稽核也要學會判斷「沒有發現問題」，不能預設每個章節一定存在缺失。" },
+
+    { id: 12, category: "document", clause: "7.5",
+      context: "文件清單、現場版本及教育訓練紀錄均顯示空壓操作標準為 V5。",
+      question: "目前最適當的稽核結論為何？",
+      options: ["一定要找到一項文件缺失", "目前抽查證據顯示文件版本控制一致，暫無明顯異常", "V5 一定比 V4 錯", "電子文件不能作為受控文件"],
+      answer: 1,
+      explanation: "文件清單、現場文件及人員認知三項證據目前一致，因此此抽樣沒有顯示明顯文件管制問題。",
+      evidence: "如需擴大抽樣，可再抽查其他文件或其他使用地點。",
+      thinking: "好的稽核員不是「一定要開缺失」，而是依客觀證據作判斷。" },
+
+    { id: 13, category: "law", clause: "4.2、9.1",
+      context: "程序規定半年確認法規更新、每年至少一次符合性評估；1 月已評估符合性，7 月已確認更新。",
+      question: "依目前資料，最合理的判斷為何？",
+      options: ["7 月沒有再做完整符合性評估，所以一定不符合", "目前頻率符合內部程序，可確認 7 月更新結果是否有新增要求需進一步評估", "法規一定要每月評估", "只要網站有更新就不需符合性評估"],
+      answer: 1,
+      explanation: "組織規定符合性評估每年至少一次，目前 1 月已有紀錄；半年更新確認也有執行。若 7 月發現新適用要求，才需進一步確認如何處理。",
+      evidence: "可查閱 7 月法規更新來源、確認人員及更新結果。",
+      thinking: "不要自行創造 ISO 沒有規定的固定頻率要求。" },
+
+    { id: 14, category: "audit", clause: "9.2",
+      context: "設備單位去年 3 項 NC 且能源影響高，今年只安排 1 小時；行政單位 0 NC 且能源影響低，反而安排 2 小時。",
+      question: "這份稽核方案最值得追查的地方是什麼？",
+      options: ["每個部門一定只能稽核 1 小時", "稽核時間安排是否真正考量先前結果、過程重要性及能源績效影響", "行政單位不能被稽核", "設備單位一定要稽核 8 小時"],
+      answer: 1,
+      explanation: "時間長短本身不是 ISO 要求，但目前配置與組織自己所列的風險及過往結果呈現反向關係，因此應確認稽核方案制定依據。",
+      evidence: "應查閱稽核方案風險評估、抽樣規劃及調整原因。",
+      thinking: "稽核重點是「安排是否有合理依據」，而不是自行規定某部門必須稽核幾小時。" },
+
+    { id: 15, category: "review", clause: "9.3",
+      context: "管理審查於 2026/02/10 舉行，紀錄寫「2026 年度能源目標 3%，已達成」，但引用的是 2025 年度改善 3.5%。",
+      question: "最主要的問題為何？",
+      options: ["2 月份不能舉行管理審查", "將不同期間的能源績效結果錯誤用來判定 2026 年度目標已達成，資訊期間不一致", "管理審查一定只能 12 月舉行", "2025 改善 3.5% 一定是錯誤數據"],
+      answer: 1,
+      explanation: "管理審查可以在不同時間舉行，但輸入資訊及結論必須正確。此處以 2025 結果判定 2026 全年目標已達成，期間明顯不一致。",
+      evidence: "應確認 2026 目標的追蹤方式、截至 2 月的執行狀態，以及管理審查結論是否需要修正。",
+      thinking: "這是一種很常見的進階稽核問題：資料都有，但「年份用錯」。" },
+
+    { id: 16, category: "corrective", clause: "10.1",
+      context: "4/17 有效性確認判定矯正措施有效，但 4/22、4/23 再次出現相同壓力超標。",
+      question: "這組資料最可能表示什麼？",
+      options: ["4/17 量到 6.4 bar，所以有效性確認一定正確", "後續相同問題再發，應重新評估原矯正措施及有效性確認是否充分", "0.2 bar 偏差永遠不重要", "只需刪除 4/22 及 4/23 紀錄"],
+      answer: 1,
+      explanation: "有效性確認的目的在於確認矯正措施是否能防止問題再發。短期抽查一次正常，但數日後同樣問題再次出現，表示原措施可能沒有真正消除原因。",
+      evidence: "應重新分析末端壓力不足、人員自行調整、控制權限及系統壓降等根本原因。",
+      thinking: "「有填有效性確認」不等於措施真的有效。後續績效本身也是重要稽核證據。" }
+  ]
+};
+
+// 首頁顯示的稽核模擬版本（順序即首頁排列順序）
+const AUDIT_SETS = [AUDIT_BASIC, AUDIT_ADV];
+
+
+/* ==========================================================
+   程式區：一般不需要修改
+   ========================================================== */
+// ============================================
+// 主程式：頁面切換、抽題、作答、結果
+// 修改題目請找上方的 SITE / CLAUSE_QUIZ / iso50001Questions / AUDIT_SIM
+// ============================================
+(function () {
+  const app = document.getElementById("app");
+  const STORE_KEY = "iso50001-progress-v1";
+
+  // ---------- 工具 ----------
+  function esc(s) {
+    return String(s == null ? "" : s).replace(/[&<>"']/g, c => ({
+      "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+    }[c]));
+  }
+
+  function shuffle(arr) {
+    const a = arr.slice();
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  }
+
+  function commentFor(points) {
+    const found = SITE.comments.find(c => points >= c.min);
+    return found ? found.text : "";
+  }
+
+  function chapterOf(q) {
+    if (q.chapter != null) return String(q.chapter);
+    const clause = String(q.clause || "");
+    if (/[～~]/.test(clause)) return "綜合";
+    const m = clause.match(/^(\d+)/);
+    return m ? m[1] : "綜合";
+  }
+
+  function clauseText(q) {
+    if (!q.clause) return "";
+    return q.clauseName ? q.clause + " " + q.clauseName : q.clause;
+  }
+
+  function scrollTop() { window.scrollTo(0, 0); }
+
+  // ---------- 練習紀錄（只存在作答者自己的瀏覽器） ----------
+  function loadProgress() {
+    if (!SITE.rememberProgress) return {};
+    try { return JSON.parse(localStorage.getItem(STORE_KEY)) || {}; }
+    catch (e) { return {}; }
+  }
+
+  function saveProgress(key, points) {
+    if (!SITE.rememberProgress) return;
+    try {
+      const all = loadProgress();
+      const prev = all[key] || { best: 0, attempts: 0 };
+      all[key] = { best: Math.max(prev.best, points), attempts: prev.attempts + 1 };
+      localStorage.setItem(STORE_KEY, JSON.stringify(all));
+    } catch (e) { /* 瀏覽器不允許儲存時略過 */ }
+  }
+
+  function statusHTML(key) {
+    if (!SITE.rememberProgress) return "";
+    const p = loadProgress()[key];
+    if (!p) return `<div class="status">尚未練習</div>`;
+    return `<div class="status done">已練習 ${p.attempts} 次，最佳 ${p.best} 分</div>`;
+  }
+
+  // ============================================
+  // 首頁
+  // ============================================
+  function showHome() {
+    document.title = SITE.title;
+    const clauseCount = Math.min(CLAUSE_QUIZ.questionCount, CLAUSE_QUIZ.bank.length);
+
+    app.innerHTML = `
+      <header class="site-head">
+        <h1>${esc(SITE.title)}</h1>
+        <p class="lead">${esc(SITE.intro)}</p>
+      </header>
+
+      <div class="choices">
+        <a class="card" href="#/clauses">
+          <h2>${esc(CLAUSE_QUIZ.title)}</h2>
+          <p>${esc(CLAUSE_QUIZ.description)}</p>
+          <ul class="meta">
+            <li><span>適合對象</span>${esc(CLAUSE_QUIZ.audience)}</li>
+            <li><span>出題方式</span>從 ${CLAUSE_QUIZ.bank.length} 題中隨機抽 ${clauseCount} 題</li>
+          </ul>
+          ${statusHTML("clauses")}
+          <span class="btn">開始測驗</span>
+        </a>
+
+        ${AUDIT_SETS.map(set => `
+          <a class="card" href="#/${esc(set.id)}">
+            <h2>${esc(set.title)}${set.level ? `<span class="level">${esc(set.level)}</span>` : ""}</h2>
+            <p>${esc(set.description)}</p>
+            <ul class="meta">
+              <li><span>適合對象</span>${esc(set.audience)}</li>
+              <li><span>模擬情境</span>${set.industries.length} 種行業別可選</li>
+              <li><span>出題方式</span>依負責項目出題，共 ${set.responsibilities.length} 個項目 ${set.questions.length} 題</li>
+            </ul>
+            ${statusHTML(set.id)}
+            <span class="btn">開始模擬</span>
+          </a>`).join("")}
+      </div>
+
+      <footer class="site-foot">${esc(SITE.footer)}</footer>`;
+  }
+
+  // ============================================
+  // 條文架構測驗
+  // ============================================
+  function showClauseIntro() {
+    document.title = CLAUSE_QUIZ.title + "｜" + SITE.title;
+    const count = Math.min(CLAUSE_QUIZ.questionCount, CLAUSE_QUIZ.bank.length);
+    const groups = new Set(CLAUSE_QUIZ.bank.map(chapterOf)).size;
+    const quotaText = CLAUSE_QUIZ.minPerChapter > 0
+      ? `每個章節至少 ${CLAUSE_QUIZ.minPerChapter} 題，其餘隨機`
+      : "完全隨機";
+    const modeText = CLAUSE_QUIZ.feedbackMode === "end"
+      ? "作答過程不顯示對錯，全部完成後公布分數與錯誤說明"
+      : "每題作答後立即顯示對錯與說明";
+
+    app.innerHTML = `
+      <a class="back" href="#/">← 回首頁</a>
+      <div class="panel">
+        <h1>${esc(CLAUSE_QUIZ.title)}</h1>
+        <p>${esc(CLAUSE_QUIZ.description)}</p>
+        <ul class="meta">
+          <li><span>題庫</span>共 ${CLAUSE_QUIZ.bank.length} 題，分為 ${groups} 個章節分類</li>
+          <li><span>本次題數</span>${count} 題，滿分 100 分</li>
+          <li><span>抽題方式</span>${quotaText}</li>
+          <li><span>作答方式</span>${modeText}</li>
+        </ul>
+        ${statusHTML("clauses")}
+        <div class="actions"><button class="btn" id="start">開始作答</button></div>
+      </div>`;
+
+    document.getElementById("start").onclick = startClauseQuiz;
+  }
+
+  function pickClauseQuestions() {
+    const bank = CLAUSE_QUIZ.bank;
+    const count = Math.min(CLAUSE_QUIZ.questionCount, bank.length);
+    let picked = [];
+
+    if (CLAUSE_QUIZ.minPerChapter > 0) {
+      const groups = {};
+      bank.forEach(q => {
+        const ch = chapterOf(q);
+        if (!groups[ch]) groups[ch] = [];
+        groups[ch].push(q);
+      });
+      shuffle(Object.keys(groups)).forEach(ch => {
+        shuffle(groups[ch]).slice(0, CLAUSE_QUIZ.minPerChapter).forEach(q => {
+          if (picked.length < count) picked.push(q);
+        });
+      });
+    }
+
+    const rest = shuffle(bank.filter(q => !picked.includes(q)));
+    picked = picked.concat(rest.slice(0, count - picked.length));
+    return shuffle(picked);
+  }
+
+  function startClauseQuiz() {
+    runQuiz({
+      label: CLAUSE_QUIZ.title,
+      questions: pickClauseQuestions(),
+      shuffleOptions: CLAUSE_QUIZ.shuffleOptions,
+      feedbackMode: CLAUSE_QUIZ.feedbackMode,
+      exitHash: "#/clauses",
+      storeKey: "clauses",
+      retryText: "重新抽題測驗",
+      onRetry: startClauseQuiz,
+      afterLinks: `<a class="btn secondary" href="#/">回首頁</a>`
+    });
+  }
+
+  function runQuiz(cfg) {
+    const instant = cfg.feedbackMode !== "end";
+
+    const qs = cfg.questions.map(q => {
+      let opts = q.options.map((text, i) => ({ text, correct: i === q.answer }));
+      const hasAbove = q.options.some(t => /^以上/.test(t)); // 含「以上皆是」時不打亂
+      if (cfg.shuffleOptions && !hasAbove) opts = shuffle(opts);
+      return Object.assign({}, q, { opts });
+    });
+
+    let current = 0;
+    const picks = [];
+
+    function renderQuestion() {
+      const q = qs[current];
+      const isLast = current === qs.length - 1;
+
+      app.innerHTML = `
+        <div class="panel">
+          <div class="quiz-top">
+            <a class="back" href="${cfg.exitHash}" id="exit">← 離開測驗</a>
+            <span>${esc(cfg.label)}</span>
+          </div>
+          <div class="progress"><div class="progress-bar" id="bar"></div></div>
+          <div class="count-line">第 ${current + 1} 題 / 共 ${qs.length} 題</div>
+          ${q.scenario ? `<div class="scenario"><span class="scenario-label">情境</span>${esc(q.scenario)}</div>` : ""}
+          <p class="question">${esc(q.question)}</p>
+          <div class="options">
+            ${q.opts.map((o, i) => `<button class="option" data-i="${i}">${esc(o.text)}</button>`).join("")}
+          </div>
+          <div id="feedback"></div>
+          <div class="actions"><button class="btn" id="next" hidden>${isLast ? (instant ? "看結果" : "交卷看成績") : "下一題"}</button></div>
+        </div>`;
+
+      const bar = document.getElementById("bar");
+      setTimeout(() => { bar.style.width = (current / qs.length * 100) + "%"; }, 10);
+
+      document.getElementById("exit").onclick = e => {
+        if (!confirm("確定要離開嗎？這次作答不會保留。")) e.preventDefault();
+      };
+
+      app.querySelectorAll(".option").forEach(btn => {
+        btn.onclick = () => choose(Number(btn.dataset.i));
+      });
+
+      document.getElementById("next").onclick = () => {
+        current++;
+        if (current < qs.length) renderQuestion();
+        else renderResult();
+        scrollTop();
+      };
+    }
+
+    function choose(i) {
+      const q = qs[current];
+      const buttons = app.querySelectorAll(".option");
+      picks[current] = { index: i, text: q.opts[i].text, right: q.opts[i].correct };
+      const next = document.getElementById("next");
+
+      if (!instant) {
+        buttons.forEach((b, idx) => b.classList.toggle("selected", idx === i));
+        next.hidden = false;
+        return;
+      }
+
+      const right = q.opts[i].correct;
+      const correctText = q.opts.find(o => o.correct).text;
+      buttons.forEach((b, idx) => {
+        b.disabled = true;
+        if (q.opts[idx].correct) b.classList.add("correct");
+        else if (idx === i) b.classList.add("wrong");
+      });
+
+      document.getElementById("feedback").innerHTML = `
+        <div class="feedback">
+          <strong class="${right ? "ok" : "ng"}">${right ? "答對了" : "答錯了，正確答案是「" + esc(correctText) + "」"}</strong>
+          ${esc(q.explanation)}
+          ${q.clause ? `<p class="clause">相關條文：${esc(clauseText(q))}</p>` : ""}
+        </div>`;
+
+      next.hidden = false;
+      next.focus();
+    }
+
+    function renderResult() {
+      const total = qs.length;
+      const correct = picks.filter(p => p && p.right).length;
+      const points = Math.round(correct / total * 100);
+      saveProgress(cfg.storeKey, points);
+
+      const wrongItems = qs.map((q, idx) => ({ q, idx, p: picks[idx] })).filter(x => !x.p.right);
+
+      const wrongHTML = wrongItems.length === 0
+        ? `<p class="all-right">全部答對，沒有錯誤題目。</p>`
+        : `<ol class="wrong-list">
+            ${wrongItems.map(({ q, idx, p }) => `
+              <li class="wrong-item">
+                <div class="wrong-no">第 ${idx + 1} 題${q.clause ? `<span>${esc(clauseText(q))}</span>` : ""}</div>
+                ${q.scenario ? `<p class="wrong-scenario">${esc(q.scenario)}</p>` : ""}
+                <p class="wrong-q">${esc(q.question)}</p>
+                <dl class="answers">
+                  <div><dt>你的答案</dt><dd class="ng">${esc(p.text)}</dd></div>
+                  <div><dt>正確答案</dt><dd class="ok">${esc(q.opts.find(o => o.correct).text)}</dd></div>
+                </dl>
+                <p class="explain"><strong>說明</strong>${esc(q.explanation)}</p>
+              </li>`).join("")}
+          </ol>`;
+
+      app.innerHTML = `
+        <div class="panel">
+          <div class="progress"><div class="progress-bar" style="width:100%"></div></div>
+          <h1 style="margin-top:20px">${esc(cfg.label)}：測驗結果</h1>
+          <div class="score">${points}<small>分</small></div>
+          <p class="tally">答對 <b class="ok">${correct}</b> 題，答錯 <b class="ng">${total - correct}</b> 題，共 ${total} 題</p>
+          <p>${esc(commentFor(points))}</p>
+          <div class="actions">
+            <button class="btn" id="retry">${esc(cfg.retryText)}</button>
+            ${cfg.afterLinks}
+          </div>
+        </div>
+
+        <section class="panel result-section">
+          <h2>錯誤題目說明${wrongItems.length ? `（${wrongItems.length} 題）` : ""}</h2>
+          ${wrongHTML}
+        </section>
+
+        <section class="panel result-section">
+          <details>
+            <summary>查看全部 ${total} 題作答情形</summary>
+            <ul class="review">
+              ${qs.map((q, idx) => `
+                <li>
+                  <span class="mark ${picks[idx].right ? "ok" : "ng"}">${picks[idx].right ? "✓" : "✗"}</span>${idx + 1}. ${esc(q.question)}
+                  <span class="detail">正確答案：${esc(q.opts.find(o => o.correct).text)}${q.clause ? "｜" + esc(clauseText(q)) : ""}</span>
+                </li>`).join("")}
+            </ul>
+          </details>
+        </section>`;
+
+      document.getElementById("retry").onclick = () => { cfg.onRetry(); scrollTop(); };
+    }
+
+    renderQuestion();
+  }
+
+  // ============================================
+  // 內部稽核模擬測驗
+  // ============================================
+  const audit = { set: null, industry: null, selected: [], questions: [], answers: {} };
+
+  function findResp(id) {
+    return audit.set.responsibilities.find(r => r.id === id);
+  }
+
+  function findIndustry(id) {
+    return audit.set.industries.find(i => i.id === id);
+  }
+
+  const STEP_NAMES = ["行業別", "負責項目", "組織背景", "文件審查", "訪談", "稽核測驗", "結果"];
+
+  function stepBar(n) {
+    return `<div class="steps">${STEP_NAMES.map((name, i) =>
+      `<span class="step${i + 1 === n ? " on" : ""}${i + 1 < n ? " done" : ""}">${i + 1} ${name}</span>`).join("")}</div>`;
+  }
+
+  function startAudit(set) {
+    if (!audit.set || audit.set.id !== set.id) {
+      audit.set = set;
+      audit.industry = null;
+      audit.selected = [];
+      audit.answers = {};
+    }
+    showAuditStep1();
+  }
+
+  function auditHead(step) {
+    return `<a class="back" href="#/">← 回首頁</a>${stepBar(step)}`;
+  }
+
+  // ---------- STEP 1 行業別 ----------
+  function showAuditStep1() {
+    const set = audit.set;
+    document.title = set.title + "｜" + SITE.title;
+    app.innerHTML = `
+      ${auditHead(1)}
+      <div class="panel">
+        <h1>${esc(set.title)}<span class="level">${esc(set.level)}</span></h1>
+        <p>${esc(set.description)}</p>
+        <h2 class="sub">選擇模擬行業別</h2>
+        <p class="lead">不同產業會顯示不同的主要製程、能源設備及重大能源使用（SEU）。</p>
+        <div class="scenario"><span class="scenario-label">說明</span>${esc(set.notes.start)}</div>
+        ${statusHTML(set.id)}
+        <div class="industry-grid">
+          ${set.industries.map(i => `
+            <button type="button" class="industry${audit.industry === i.id ? " selected" : ""}" data-id="${esc(i.id)}">
+              <span class="industry-icon">${i.icon}</span>${esc(i.name)}
+            </button>`).join("")}
+        </div>
+        <div class="actions"><button class="btn" id="go">下一步 →</button></div>
+      </div>`;
+
+    app.querySelectorAll(".industry").forEach(btn => {
+      btn.onclick = () => {
+        audit.industry = btn.dataset.id;
+        app.querySelectorAll(".industry").forEach(b => b.classList.toggle("selected", b === btn));
+      };
+    });
+
+    document.getElementById("go").onclick = () => {
+      if (!audit.industry) { alert("請先選擇一個模擬行業別"); return; }
+      showAuditStep2();
+      scrollTop();
+    };
+  }
+
+  // ---------- STEP 2 負責項目 ----------
+  function showAuditStep2() {
+    app.innerHTML = `
+      ${auditHead(2)}
+      <div class="panel">
+        <h1>選擇您的負責項目</h1>
+        <p>請依實際工作內容選擇，可複選。測驗會依您選擇的項目分區出題。</p>
+        <div class="pick-grid">
+          ${audit.set.responsibilities.map(r => `
+            <label class="pick">
+              <input type="checkbox" value="${esc(r.id)}" ${audit.selected.includes(r.id) ? "checked" : ""}>
+              <strong>${esc(r.name)}</strong>
+              <small>${esc(r.description)}</small>
+              <span class="clause-tag">ISO 50001 ${esc(r.clauses)}</span>
+            </label>`).join("")}
+        </div>
+        <div class="actions">
+          <button class="btn secondary" id="back">← 返回</button>
+          <button class="btn secondary" id="all">全選</button>
+          <button class="btn" id="go">開始模擬 →</button>
+        </div>
+      </div>`;
+
+    document.getElementById("all").onclick = () => {
+      const boxes = app.querySelectorAll(".pick input");
+      const allOn = [...boxes].every(b => b.checked);
+      boxes.forEach(b => { b.checked = !allOn; });
+    };
+    document.getElementById("back").onclick = () => { showAuditStep1(); scrollTop(); };
+    document.getElementById("go").onclick = () => {
+      audit.selected = [...app.querySelectorAll(".pick input:checked")].map(b => b.value);
+      if (audit.selected.length === 0) { alert("請至少選擇一項負責項目"); return; }
+      audit.answers = {};
+      showAuditStep3();
+      scrollTop();
+    };
+  }
+
+  // ---------- STEP 3 組織背景 ----------
+  function showAuditStep3() {
+    const set = audit.set;
+    const ind = findIndustry(audit.industry);
+    const rows = [
+      ["行業別", ind.name],
+      ["員工人數", set.company.employees],
+      ["主要製程", ind.process],
+      ["主要能源", ind.energy],
+      ["主要能源設備", ind.equipment],
+      ["重大能源使用（SEU）", ind.seu]
+    ].concat(set.company.extraRows || []);
+
+    app.innerHTML = `
+      ${auditHead(3)}
+      <div class="panel">
+        <h1>模擬組織背景</h1>
+        <h2 class="sub">${ind.icon} ${esc(ind.company)}</h2>
+        <table class="info"><tbody>
+          ${rows.map(r => `<tr><th>${esc(r[0])}</th><td>${esc(r[1])}</td></tr>`).join("")}
+        </tbody></table>
+        <div class="scenario warn"><span class="scenario-label">稽核背景</span>${esc(set.company.situation)}</div>
+        <h2 class="sub">本次稽核項目</h2>
+        <div>${audit.selected.map(id => `<span class="section-tag">${esc(findResp(id).name)}</span>`).join("")}</div>
+        <div class="actions">
+          <button class="btn secondary" id="back">← 返回</button>
+          <button class="btn" id="go">開始文件審查 →</button>
+        </div>
+      </div>`;
+    document.getElementById("back").onclick = () => { showAuditStep2(); scrollTop(); };
+    document.getElementById("go").onclick = () => { showAuditStep4(); scrollTop(); };
+  }
+
+  // ---------- STEP 4 文件 ----------
+  function showAuditStep4() {
+    const set = audit.set;
+    app.innerHTML = `
+      ${auditHead(4)}
+      <div class="panel">
+        <h1>文件審查</h1>
+        <div class="scenario"><span class="scenario-label">稽核提示</span>${esc(set.notes.docs)}</div>
+        ${audit.selected.map(id => {
+          const doc = set.documents[id];
+          if (!doc) return "";
+          return `
+            <div class="doc">
+              <button class="doc-title" type="button">📄 ${esc(findResp(id).name)}｜${esc(doc.title)}<span>展開</span></button>
+              <div class="doc-content">${doc.content}</div>
+            </div>`;
+        }).join("")}
+        <div class="actions">
+          <button class="btn secondary" id="back">← 返回</button>
+          <button class="btn" id="go">進行人員訪談 →</button>
+        </div>
+      </div>`;
+
+    app.querySelectorAll(".doc-title").forEach(btn => {
+      btn.onclick = () => {
+        const doc = btn.parentElement;
+        doc.classList.toggle("open");
+        btn.querySelector("span").textContent = doc.classList.contains("open") ? "收合" : "展開";
+      };
+    });
+    document.getElementById("back").onclick = () => { showAuditStep3(); scrollTop(); };
+    document.getElementById("go").onclick = () => { showAuditStep5(); scrollTop(); };
+  }
+
+  // ---------- STEP 5 訪談 ----------
+  function showAuditStep5() {
+    const set = audit.set;
+    app.innerHTML = `
+      ${auditHead(5)}
+      <div class="panel">
+        <h1>人員訪談</h1>
+        <p>請將訪談內容與前一頁的文件交叉比對，部分回答可能合理，也可能透露文件與實際執行不一致。</p>
+        ${audit.selected.map(id => {
+          const lines = set.interviews[id];
+          if (!lines) return "";
+          const r = findResp(id);
+          return `<h2 class="sub">${esc(r.name)} <span class="clause-tag">ISO 50001 ${esc(r.clauses)}</span></h2>` +
+            lines.map(l => `
+              <div class="dialogue ${l[0] === "稽核員" ? "auditor" : "employee"}">
+                <strong>${esc(l[0])}</strong>${esc(l[1])}
+              </div>`).join("");
+        }).join("")}
+        <div class="actions">
+          <button class="btn secondary" id="back">← 返回</button>
+          <button class="btn" id="go">開始稽核測驗 →</button>
+        </div>
+      </div>`;
+    document.getElementById("back").onclick = () => { showAuditStep4(); scrollTop(); };
+    document.getElementById("go").onclick = () => { showAuditStep6(); scrollTop(); };
+  }
+
+  // ---------- STEP 6 測驗 ----------
+  function showAuditStep6() {
+    const set = audit.set;
+    audit.questions = set.questions.filter(q => audit.selected.includes(q.category));
+
+    app.innerHTML = `
+      ${auditHead(6)}
+      <div class="panel">
+        <h1>${esc(set.title)}<span class="level">${esc(set.level)}</span></h1>
+        <div class="scenario"><span class="scenario-label">作答說明</span>${esc(set.notes.quiz)}共 ${audit.questions.length} 題。</div>
+        ${audit.selected.map(cat => {
+          const list = audit.questions.filter(q => q.category === cat);
+          if (!list.length) return "";
+          const r = findResp(cat);
+          return `<h2 class="sub">${esc(r.name)} <span class="clause-tag">主要對應 ISO 50001 ${esc(r.clauses)}</span></h2>` +
+            list.map(q => `
+              <div class="a-q">
+                <span class="clause-tag">ISO 50001 ${esc(q.clause)}</span>
+                ${q.context ? `<div class="context"><span class="scenario-label">稽核情境</span>${esc(q.context)}</div>` : ""}
+                <p class="question">${esc(q.question)}</p>
+                ${q.options.map((opt, i) => `
+                  <label class="a-option">
+                    <input type="radio" name="q${q.id}" value="${i}" ${audit.answers[q.id] === i ? "checked" : ""}>
+                    <span>${String.fromCharCode(65 + i)}. ${esc(opt)}</span>
+                  </label>`).join("")}
+              </div>`).join("");
+        }).join("")}
+        <div class="actions">
+          <button class="btn secondary" id="back">← 返回訪談</button>
+          <button class="btn" id="submit">完成測驗，看成績</button>
+        </div>
+      </div>`;
+
+    app.querySelectorAll('input[type="radio"]').forEach(r => {
+      r.onchange = () => { audit.answers[Number(r.name.slice(1))] = Number(r.value); };
+    });
+    document.getElementById("back").onclick = () => { showAuditStep5(); scrollTop(); };
+    document.getElementById("submit").onclick = () => {
+      const unanswered = audit.questions.filter(q => audit.answers[q.id] == null).length;
+      if (unanswered > 0 && !confirm(`尚有 ${unanswered} 題未作答，未作答將以答錯計算，是否仍要送出？`)) return;
+      showAuditResult();
+      scrollTop();
+    };
+  }
+
+  // ---------- STEP 7 結果 ----------
+  function showAuditResult() {
+    const set = audit.set;
+    const ind = findIndustry(audit.industry);
+    const list = audit.questions;
+    const total = list.length;
+    let correct = 0;
+    const byCat = {};
+
+    list.forEach(q => {
+      const right = audit.answers[q.id] === q.answer;
+      if (!byCat[q.category]) byCat[q.category] = { total: 0, correct: 0 };
+      byCat[q.category].total++;
+      if (right) { correct++; byCat[q.category].correct++; }
+    });
+
+    const points = total ? Math.round(correct / total * 100) : 0;
+    saveProgress(set.id, points);
+
+    app.innerHTML = `
+      ${auditHead(7)}
+      <div class="panel">
+        <h1>${esc(set.title)}<span class="level">${esc(set.level)}</span>：結果</h1>
+        <div><span class="section-tag">${ind.icon} ${esc(ind.name)}</span></div>
+        <p class="lead">${esc(ind.company)}</p>
+        <div class="score">${points}<small>分</small></div>
+        <p class="tally">答對 <b class="ok">${correct}</b> 題，答錯 <b class="ng">${total - correct}</b> 題，共 ${total} 題</p>
+        <p>${esc(commentFor(points))}</p>
+        <div class="actions">
+          <button class="btn" id="again">換個行業再做一次</button>
+          <a class="btn secondary" href="#/">回首頁</a>
+        </div>
+      </div>
+
+      <section class="panel result-section">
+        <h2>各負責項目結果</h2>
+        ${Object.keys(byCat).map(id => {
+          const d = byCat[id];
+          const pct = Math.round(d.correct / d.total * 100);
+          const r = findResp(id);
+          return `
+            <div class="cat-row">
+              <strong>${esc(r.name)}</strong><span class="num">${d.correct}/${d.total}（${pct}%）</span>
+              <div class="progress"><div class="progress-bar" style="width:${pct}%"></div></div>
+              <small class="muted">對應條文：ISO 50001 ${esc(r.clauses)}</small>
+            </div>`;
+        }).join("")}
+      </section>
+
+      <section class="panel result-section">
+        <h2>逐題正解與解析</h2>
+        ${list.map((q, idx) => {
+          const picked = audit.answers[q.id];
+          const right = picked === q.answer;
+          return `
+            <div class="a-review${right ? "" : " wrong"}">
+              <div class="wrong-no">第 ${idx + 1} 題　<span>${esc(findResp(q.category).name)}｜ISO 50001 ${esc(q.clause)}</span></div>
+              ${q.context ? `<div class="context"><span class="scenario-label">原始情境</span>${esc(q.context)}</div>` : ""}
+              <p class="wrong-q">${right ? '<b class="ok">✓ 答對</b>' : '<b class="ng">✕ 答錯</b>'}　${esc(q.question)}</p>
+              <dl class="answers">
+                <div><dt>你的答案</dt><dd class="${right ? "ok" : "ng"}">${picked == null ? "未作答" : String.fromCharCode(65 + picked) + ". " + esc(q.options[picked])}</dd></div>
+                <div><dt>正確答案</dt><dd class="ok">${String.fromCharCode(65 + q.answer)}. ${esc(q.options[q.answer])}</dd></div>
+              </dl>
+              <p class="explain"><strong>正解說明</strong>${esc(q.explanation)}</p>
+              ${q.evidence ? `<p class="explain evidence"><strong>🔎 稽核員下一步可查證</strong>${esc(q.evidence)}</p>` : ""}
+              ${q.thinking ? `<p class="explain thinking"><strong>💡 進階稽核思維</strong>${esc(q.thinking)}</p>` : ""}
+              ${q.practical ? `<p class="explain tip"><strong>實務稽核提醒</strong>${esc(q.practical)}</p>` : ""}
+            </div>`;
+        }).join("")}
+      </section>`;
+
+    document.getElementById("again").onclick = () => { showAuditStep1(); scrollTop(); };
+  }
+
+  // ============================================
+  // 網址切換
+  // ============================================
+  function route() {
+    const parts = location.hash.replace(/^#\/?/, "").split("/");
+    const set = AUDIT_SETS.find(x => x.id === parts[0]);
+    if (parts[0] === "clauses") showClauseIntro();
+    else if (set) startAudit(set);
+    else showHome();
+    scrollTop();
+  }
+
+  window.addEventListener("hashchange", route);
+  route();
+})();
+
+</script>
+</body>
+</html>
